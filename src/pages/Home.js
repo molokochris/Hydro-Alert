@@ -114,7 +114,7 @@ export default function Home() {
           borderTopRightRadius: 40,
           borderTopLeftRadius: 40,
           paddingVertical: 10,
-          paddingHorizontal: 10,
+          paddingHorizontal: 18,
         }}
       >
         {isUpdates ? (
