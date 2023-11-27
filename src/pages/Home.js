@@ -1,5 +1,5 @@
 import { View, Text } from "react-native";
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 import { StatusBar } from "react-native";
 import { Pressable } from "react-native";
 import { Icon } from "@rneui/themed";
@@ -10,6 +10,10 @@ import { ScrollView } from "react-native";
 SplashScreen.preventAutoHideAsync();
 
 export default function Home() {
+  const [showOver, setShowOver] = useState(false);
+  const [isUpdates, setIsUpdates] = useState(true);
+
+  // fonts
   const [isLoaded] = useFonts({
     "Poppins-Black": require("../../assets/fonts/Poppins-Black.ttf"),
     "Poppins-Bold": require("../../assets/fonts/Poppins-Bold.ttf"),
@@ -57,10 +61,11 @@ export default function Home() {
           }}
         >
           <Pressable
+            onPress={() => setIsUpdates(true)}
             style={{
               width: "50%",
               textAlign: "center",
-              backgroundColor: "#176B87",
+              backgroundColor: isUpdates ? "#176B87" : "whitesmoke",
               borderRadius: 48,
               flex: 1,
               height: "75%",
@@ -69,16 +74,20 @@ export default function Home() {
             }}
           >
             <Text
-              style={{ color: "whitesmoke", fontFamily: "Poppins-Regular" }}
+              style={{
+                color: isUpdates ? "whitesmoke" : "#176B87",
+                fontFamily: "Poppins-Regular",
+              }}
             >
               Updates
             </Text>
           </Pressable>
           <Pressable
+            onPress={() => setIsUpdates(false)}
             style={{
               width: "50%",
               textAlign: "center",
-              //   backgroundColor: "#176B87",
+              backgroundColor: isUpdates ? "whitesmoke" : "#176B87",
               borderRadius: 48,
               flex: 1,
               height: "75%",
@@ -87,7 +96,11 @@ export default function Home() {
               flexDirection: "row",
             }}
           >
-            <Icon name="truck" type="fontisto" color="#176B87" />
+            <Icon
+              name="truck"
+              type="fontisto"
+              color={isUpdates ? "#176B87" : "whitesmoke"}
+            />
             {/* <Text style={{ color: "gray", marginLeft: 4 }}>Truck</Text> */}
           </Pressable>
         </View>
@@ -101,342 +114,348 @@ export default function Home() {
           borderTopRightRadius: 40,
           borderTopLeftRadius: 40,
           paddingVertical: 10,
-          paddingHorizontal: 18,
+          paddingHorizontal: 10,
         }}
       >
-        <ScrollView
-          style={{ borderRadius: 48 }}
-          showsVerticalScrollIndicator={false}
-          overScrollMode="never"
-        >
-          <Pressable
-            onPress={() => console.log("Pressed!!")}
-            style={{
-              width: "100%",
-              height: 125,
-              borderRadius: 35,
-              paddingVertical: 10,
-              paddingHorizontal: 14,
-              backgroundColor: "tomato",
-              flexDirection: "column",
-              marginBottom: 10,
-              elevation: 18,
-              shadowColor: "#D9D9D9",
-            }}
+        {isUpdates ? (
+          <ScrollView
+            style={{ borderRadius: 48 }}
+            showsVerticalScrollIndicator={false}
+            overScrollMode="never"
           >
-            <Text
+            <Pressable
+              onPress={() => setShowOver(!showOver)}
               style={{
-                color: "whitesmoke",
-                alignSelf: "center",
-                fontFamily: "Poppins-Bold",
-                fontSize: 22,
-                //   height: "10%",
+                width: "100%",
+                height: showOver ? "100%" : 125,
+                borderRadius: 35,
+                paddingVertical: 10,
+                paddingHorizontal: 14,
+                backgroundColor: "tomato",
+                flexDirection: "column",
+                marginBottom: 10,
+                elevation: 18,
+                shadowColor: "#D9D9D9",
+                zIndex: showOver ? 2 : 1,
+                position: showOver ? "absolute" : "none",
               }}
             >
-              Emergency Alert
-            </Text>
-            <View
-              style={{
-                flexDirection: "row",
-                //   backgroundColor: "blue",
-                height: "80%",
-              }}
-            >
-              <View style={{ width: "80%", padding: 4 }}>
-                <Text
-                  style={{
-                    height: "100%",
-                    color: "whitesmoke",
-                    paddingVertical: 8,
-                  }}
-                >
-                  Minim ea aliqua aute eiusmod voluptate adipisicing in mollit
-                  excepteur cupidatat ipsum tempor. Fugiat est dolor elit
-                  laboris ullamco irure sunt commodo ut duis nostrud enim.
-                </Text>
-              </View>
-              <View
+              <Text
                 style={{
-                  width: "20%",
-                  height: 30,
-                  backgroundColor: "whitesmoke",
-                  borderRadius: 18,
-                  paddingVertical: 4,
-                  paddingHorizontal: 2,
-                  justifyContent: "center",
-                  alignItems: "center",
+                  color: "whitesmoke",
+                  alignSelf: "center",
+                  fontFamily: "Poppins-Bold",
+                  fontSize: 22,
+                  //   height: "10%",
                 }}
               >
-                <Text style={{ fontFamily: "Poppins-Regular" }}>15 : 00</Text>
+                Emergency Alert
+              </Text>
+              <View
+                style={{
+                  flexDirection: "row",
+                  //   backgroundColor: "blue",
+                  height: "80%",
+                }}
+              >
+                <View style={{ width: "80%", padding: 4 }}>
+                  <Text
+                    style={{
+                      height: "100%",
+                      color: "whitesmoke",
+                      paddingVertical: 8,
+                    }}
+                  >
+                    Minim ea aliqua aute eiusmod voluptate adipisicing in mollit
+                    excepteur cupidatat ipsum tempor. Fugiat est dolor elit
+                    laboris ullamco irure sunt commodo ut duis nostrud enim.
+                  </Text>
+                </View>
+                <View
+                  style={{
+                    width: "20%",
+                    height: 30,
+                    backgroundColor: "whitesmoke",
+                    borderRadius: 18,
+                    paddingVertical: 4,
+                    paddingHorizontal: 2,
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Text style={{ fontFamily: "Poppins-Regular" }}>15 : 00</Text>
+                </View>
               </View>
-            </View>
-          </Pressable>
+            </Pressable>
 
-          <View
-            //   onPress={() => console.log("Pressed!!")}
-            style={{
-              width: "100%",
-              height: 125,
-              borderRadius: 35,
-              paddingVertical: 10,
-              paddingHorizontal: 15,
-              backgroundColor: "#D9D9D9",
-              flexDirection: "column",
-              marginBottom: 10,
-            }}
-          >
-            <Text
-              style={{
-                color: "#808080",
-                alignSelf: "flex-start",
-                fontFamily: "Poppins-Regular",
-                fontSize: 22,
-                //   height: "10%",
-              }}
-            >
-              Ga-Makanye
-            </Text>
             <View
+              //   onPress={() => console.log("Pressed!!")}
               style={{
-                flex: 1,
-                //   backgroundColor: "red",
-                alignItems: "flex-end",
-                flexDirection: "row",
+                width: "100%",
+                height: 125,
+                borderRadius: 35,
+                paddingVertical: 10,
+                paddingHorizontal: 15,
+                backgroundColor: "#D9D9D9",
+                flexDirection: "column",
+                marginBottom: 10,
               }}
             >
               <Text
                 style={{
-                  fontSize: 16,
+                  color: "#808080",
+                  alignSelf: "flex-start",
                   fontFamily: "Poppins-Regular",
-                  color: "gray",
-                  width: "80%",
+                  fontSize: 22,
+                  //   height: "10%",
                 }}
               >
-                Tue, 12 Nov 2023
+                Ga-Makanye
               </Text>
               <View
                 style={{
-                  paddingVertical: 4,
-                  paddingHorizontal: 10,
-                  backgroundColor: "gray",
-                  borderRadius: 18,
-                  justifyContent: "center",
-                  alignItems: "center",
-                  width: "20%",
+                  flex: 1,
+                  //   backgroundColor: "red",
+                  alignItems: "flex-end",
+                  flexDirection: "row",
                 }}
               >
                 <Text
                   style={{
+                    fontSize: 16,
                     fontFamily: "Poppins-Regular",
-                    fontSize: 15,
+                    color: "gray",
+                    width: "80%",
                   }}
                 >
-                  15:00
+                  Tue, 12 Nov 2023
                 </Text>
+                <View
+                  style={{
+                    paddingVertical: 4,
+                    paddingHorizontal: 10,
+                    backgroundColor: "gray",
+                    borderRadius: 18,
+                    justifyContent: "center",
+                    alignItems: "center",
+                    width: "20%",
+                  }}
+                >
+                  <Text
+                    style={{
+                      fontFamily: "Poppins-Regular",
+                      fontSize: 15,
+                    }}
+                  >
+                    15:00
+                  </Text>
+                </View>
               </View>
             </View>
-          </View>
-          <View
-            //   onPress={() => console.log("Pressed!!")}
-            style={{
-              width: "100%",
-              height: 125,
-              borderRadius: 35,
-              paddingVertical: 10,
-              paddingHorizontal: 15,
-              backgroundColor: "white",
-              flexDirection: "column",
-              elevation: 18,
-              shadowColor: "#D9D9D9",
-              marginBottom: 10,
-            }}
-          >
-            <Text
-              style={{
-                color: "#808080",
-                alignSelf: "flex-start",
-                fontFamily: "Poppins-Regular",
-                fontSize: 22,
-                //   height: "10%",
-              }}
-            >
-              Ga-Makanye
-            </Text>
             <View
+              //   onPress={() => console.log("Pressed!!")}
               style={{
-                flex: 1,
-                //   backgroundColor: "red",
-                alignItems: "flex-end",
-                flexDirection: "row",
+                width: "100%",
+                height: 125,
+                borderRadius: 35,
+                paddingVertical: 10,
+                paddingHorizontal: 15,
+                backgroundColor: "white",
+                flexDirection: "column",
+                elevation: 18,
+                shadowColor: "#D9D9D9",
+                marginBottom: 10,
               }}
             >
               <Text
                 style={{
-                  fontSize: 16,
+                  color: "#808080",
+                  alignSelf: "flex-start",
                   fontFamily: "Poppins-Regular",
-                  color: "gray",
-                  width: "80%",
+                  fontSize: 22,
+                  //   height: "10%",
                 }}
               >
-                Tue, 12 Nov 2023
+                Ga-Makanye
               </Text>
               <View
                 style={{
-                  paddingVertical: 4,
-                  paddingHorizontal: 10,
-                  backgroundColor: "#176B87",
-                  borderRadius: 18,
-                  justifyContent: "center",
-                  alignItems: "center",
-                  width: "20%",
+                  flex: 1,
+                  //   backgroundColor: "red",
+                  alignItems: "flex-end",
+                  flexDirection: "row",
                 }}
               >
                 <Text
                   style={{
+                    fontSize: 16,
                     fontFamily: "Poppins-Regular",
-                    fontSize: 15,
-                    color: "whitesmoke",
+                    color: "gray",
+                    width: "80%",
                   }}
                 >
-                  15:00
+                  Tue, 12 Nov 2023
                 </Text>
+                <View
+                  style={{
+                    paddingVertical: 4,
+                    paddingHorizontal: 10,
+                    backgroundColor: "#176B87",
+                    borderRadius: 18,
+                    justifyContent: "center",
+                    alignItems: "center",
+                    width: "20%",
+                  }}
+                >
+                  <Text
+                    style={{
+                      fontFamily: "Poppins-Regular",
+                      fontSize: 15,
+                      color: "whitesmoke",
+                    }}
+                  >
+                    15:00
+                  </Text>
+                </View>
               </View>
             </View>
-          </View>
-          <View
-            //   onPress={() => console.log("Pressed!!")}
-            style={{
-              width: "100%",
-              height: 125,
-              borderRadius: 35,
-              paddingVertical: 10,
-              paddingHorizontal: 15,
-              backgroundColor: "white",
-              flexDirection: "column",
-              elevation: 18,
-              shadowColor: "#D9D9D9",
-              marginBottom: 10,
-            }}
-          >
-            <Text
-              style={{
-                color: "#808080",
-                alignSelf: "flex-start",
-                fontFamily: "Poppins-Regular",
-                fontSize: 22,
-                //   height: "10%",
-              }}
-            >
-              Ga-Makanye
-            </Text>
             <View
+              //   onPress={() => console.log("Pressed!!")}
               style={{
-                flex: 1,
-                //   backgroundColor: "red",
-                alignItems: "flex-end",
-                flexDirection: "row",
+                width: "100%",
+                height: 125,
+                borderRadius: 35,
+                paddingVertical: 10,
+                paddingHorizontal: 15,
+                backgroundColor: "white",
+                flexDirection: "column",
+                elevation: 18,
+                shadowColor: "#D9D9D9",
+                marginBottom: 10,
               }}
             >
               <Text
                 style={{
-                  fontSize: 16,
+                  color: "#808080",
+                  alignSelf: "flex-start",
                   fontFamily: "Poppins-Regular",
-                  color: "gray",
-                  width: "80%",
+                  fontSize: 22,
+                  //   height: "10%",
                 }}
               >
-                Tue, 12 Nov 2023
+                Ga-Makanye
               </Text>
               <View
                 style={{
-                  paddingVertical: 4,
-                  paddingHorizontal: 10,
-                  backgroundColor: "#176B87",
-                  borderRadius: 18,
-                  justifyContent: "center",
-                  alignItems: "center",
-                  width: "20%",
+                  flex: 1,
+                  //   backgroundColor: "red",
+                  alignItems: "flex-end",
+                  flexDirection: "row",
                 }}
               >
                 <Text
                   style={{
+                    fontSize: 16,
                     fontFamily: "Poppins-Regular",
-                    fontSize: 15,
-                    color: "whitesmoke",
+                    color: "gray",
+                    width: "80%",
                   }}
                 >
-                  15:00
+                  Tue, 12 Nov 2023
                 </Text>
+                <View
+                  style={{
+                    paddingVertical: 4,
+                    paddingHorizontal: 10,
+                    backgroundColor: "#176B87",
+                    borderRadius: 18,
+                    justifyContent: "center",
+                    alignItems: "center",
+                    width: "20%",
+                  }}
+                >
+                  <Text
+                    style={{
+                      fontFamily: "Poppins-Regular",
+                      fontSize: 15,
+                      color: "whitesmoke",
+                    }}
+                  >
+                    15:00
+                  </Text>
+                </View>
               </View>
             </View>
-          </View>
-          <View
-            //   onPress={() => console.log("Pressed!!")}
-            style={{
-              width: "100%",
-              height: 125,
-              borderRadius: 35,
-              paddingVertical: 10,
-              paddingHorizontal: 15,
-              backgroundColor: "white",
-              flexDirection: "column",
-              elevation: 18,
-              shadowColor: "#D9D9D9",
-            }}
-          >
-            <Text
-              style={{
-                color: "#808080",
-                alignSelf: "flex-start",
-                fontFamily: "Poppins-Regular",
-                fontSize: 22,
-                //   height: "10%",
-              }}
-            >
-              Ga-Makanye
-            </Text>
             <View
+              //   onPress={() => console.log("Pressed!!")}
               style={{
-                flex: 1,
-                //   backgroundColor: "red",
-                alignItems: "flex-end",
-                flexDirection: "row",
+                width: "100%",
+                height: 125,
+                borderRadius: 35,
+                paddingVertical: 10,
+                paddingHorizontal: 15,
+                backgroundColor: "white",
+                flexDirection: "column",
+                elevation: 18,
+                shadowColor: "#D9D9D9",
               }}
             >
               <Text
                 style={{
-                  fontSize: 16,
+                  color: "#808080",
+                  alignSelf: "flex-start",
                   fontFamily: "Poppins-Regular",
-                  color: "gray",
-                  width: "80%",
+                  fontSize: 22,
+                  //   height: "10%",
                 }}
               >
-                Tue, 12 Nov 2023
+                Ga-Makanye
               </Text>
               <View
                 style={{
-                  paddingVertical: 4,
-                  paddingHorizontal: 10,
-                  backgroundColor: "#176B87",
-                  borderRadius: 18,
-                  justifyContent: "center",
-                  alignItems: "center",
-                  width: "20%",
+                  flex: 1,
+                  //   backgroundColor: "red",
+                  alignItems: "flex-end",
+                  flexDirection: "row",
                 }}
               >
                 <Text
                   style={{
+                    fontSize: 16,
                     fontFamily: "Poppins-Regular",
-                    fontSize: 15,
-                    color: "whitesmoke",
+                    color: "gray",
+                    width: "80%",
                   }}
                 >
-                  15:00
+                  Tue, 12 Nov 2023
                 </Text>
+                <View
+                  style={{
+                    paddingVertical: 4,
+                    paddingHorizontal: 10,
+                    backgroundColor: "#176B87",
+                    borderRadius: 18,
+                    justifyContent: "center",
+                    alignItems: "center",
+                    width: "20%",
+                  }}
+                >
+                  <Text
+                    style={{
+                      fontFamily: "Poppins-Regular",
+                      fontSize: 15,
+                      color: "whitesmoke",
+                    }}
+                  >
+                    15:00
+                  </Text>
+                </View>
               </View>
             </View>
-          </View>
-        </ScrollView>
+          </ScrollView>
+        ) : (
+          <Text>Nothing to Display</Text>
+        )}
       </View>
     </View>
   );
