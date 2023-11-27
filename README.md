@@ -1,8 +1,8 @@
-# Water Alert: Polokwane Water Delivery App
+# Hydro Alert: Polokwane Water Delivery App
 
 # Introduction
 
-Water Alert is a mobile application designed to address the issue of water scarcity in Polokwane, South Africa. The app provides community members with real-time updates about the municipality's water delivery schedule, ensuring they are prepared and have access to water when it arrives. This eliminates the frustration of missed water deliveries and helps manage water consumption effectively.
+**Hydro Alert** is a mobile application designed to address the issue of water scarcity in Polokwane, South Africa. The app provides community members with real-time updates about the municipality's water delivery schedule, ensuring they are prepared and have access to water when it arrives. This eliminates the frustration of missed water deliveries and helps manage water consumption effectively.
 
 # Problem Statement
 
@@ -10,7 +10,7 @@ In Polokwane, residents often face unpredictable water delivery schedules, leadi
 
 # Solution
 
-##Water Alert tackles this problem by providing a centralized platform for community members to access accurate and up-to-date water delivery schedules. The app's features include:
+**Hydro Alert** tackles this problem by providing a centralized platform for community members to access accurate and up-to-date water delivery schedules. The app's features include:
 
 **Real-time delivery updates:** Receive timely notifications about upcoming water deliveries, ensuring you are prepared to collect water.
 
@@ -20,11 +20,11 @@ In Polokwane, residents often face unpredictable water delivery schedules, leadi
 
 # Target Audience
 
-Water Alert is primarily targeted at residents of Polokwane who are affected by unpredictable water delivery schedules. The app is particularly beneficial for households, businesses, and community organizations that rely on regular water supply.
+Hydro Alert is primarily targeted at residents of Polokwane who are affected by unpredictable water delivery schedules. The app is particularly beneficial for households, businesses, and community organizations that rely on regular water supply.
 
 # Impact
 
-Water Alert aims to make a significant positive impact on the lives of Polokwane residents by:
+Hydro Alert aims to make a significant positive impact on the lives of Polokwane residents by:
 
 **Improving access to water:** Ensure community members receive scheduled water deliveries, reducing water scarcity and improving their daily lives.
 
@@ -34,7 +34,7 @@ Water Alert aims to make a significant positive impact on the lives of Polokwane
 
 # Team
 
-Water Alert is a final group project developed by four mLab codetribe students:
+Hydro Alert is a final group project developed by four mLab codetribe students:
 
 [Your Name]
 
@@ -46,9 +46,9 @@ Water Alert is a final group project developed by four mLab codetribe students:
 
 # Contribution Guidelines
 
-If you are interested in contributing to the Water Alert project, please follow these guidelines:
+If you are interested in contributing to the Hydro Alert project, please follow these guidelines:
 
-**Fork the repository:** Create a fork of the Water Alert repository on GitHub.
+**Fork the repository:** Create a fork of the Hydro Alert repository on GitHub.
 
 **Create a branch:** Create a new branch for your changes.
 
