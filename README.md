@@ -36,13 +36,13 @@ Hydro Alert aims to make a significant positive impact on the lives of Polokwane
 
 Hydro Alert is a final group project developed by four mLab codetribe students:
 
-[Your Name]
+[Khomotso Sekhaolelo](https://github.com/khomotsojane)
 
-[Your Name]
+[MULALO Cecil TSHIGOBA](https://github.com/MulaloCecil)
 
-[Your Name]
+[Morongoa Abigail](https://github.com/morongoaabigail)
 
-[Your Name]
+[Moloko Chris Poopedi](https://github.com/molokochris)
 
 # Contribution Guidelines
 
