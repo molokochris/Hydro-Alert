@@ -6,8 +6,7 @@ import Home from "./src/pages/Home";
 import Login from "./src/pages/Login";
 import Signup from "./src/pages/Signup";
 import Search from "./src/pages/Search";
-import Location from "./src/pages/Location"
-
+import Location from "./src/pages/Location";
 
 export default function App() {
   const Stack = createNativeStackNavigator();
@@ -19,10 +18,14 @@ export default function App() {
           component={Home}
           options={{ headerShown: false }}
         />
-        <Stack.Screen name="Login" component={Login} />
-        <Stack.Screen name="Signup" component={Signup} />
-        <Stack.Screen name="Search" component={Search} />
-        <Stack.Screen name="Location" component={Location} options={{ headerShown: false }}/>
+        {/* <Stack.Screen name="Login" component={Login} /> */}
+        {/* <Stack.Screen name="Signup" component={Signup} /> */}
+        {/* <Stack.Screen name="Search" component={Search} /> */}
+        <Stack.Screen
+          name="Location"
+          component={Location}
+          options={{ headerShown: false }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
