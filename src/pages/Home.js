@@ -397,7 +397,7 @@ export default function Home({ route }) {
                         height: 50,
                         padding: 20,
                         // backgroundColor: "red",
-                        borderWidth: 1,
+                        borderWidth: 0.5,
                         borderColor: "gray",
                         justifyContent: "center",
                         alignItems: "center",
