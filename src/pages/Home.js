@@ -1,4 +1,4 @@
-import { View, Text, ActivityIndicator } from "react-native";
+import { View, Text, ActivityIndicator, Image } from "react-native";
 import React, { useCallback, useState } from "react";
 import { StatusBar } from "react-native";
 import { Pressable } from "react-native";
@@ -11,17 +11,20 @@ import { useEffect } from "react";
 
 SplashScreen.preventAutoHideAsync();
 
-export default function Home() {
+export default function Home({ route }) {
   const [showOver, setShowOver] = useState(false);
   const [isUpdates, setIsUpdates] = useState(false);
   const [updates, setUpdates] = useState();
+
+  let userLocation = route.params.location;
 
   // Fetch Data from Database
   useEffect(() => {
     setIsUpdates(false);
     const fetchUpdates = async () => {
       try {
-        const updatesRef = firestore.collection("Polokwane");
+        const updatesRef = firestore.collection(`${userLocation}`);
+        // const updatesRef = firestore.collection("Polokwane");
         const snapshot = await updatesRef.get();
         const updatesData = snapshot.docs.map((doc) => ({
           id: doc.id,
@@ -35,6 +38,7 @@ export default function Home() {
       }
     };
     fetchUpdates();
+    console.log(userLocation);
   }, []);
   // fonts
   const [isLoaded] = useFonts({
@@ -59,10 +63,16 @@ export default function Home() {
         flex: 1,
         // justifyContent: "center",
         alignItems: "center",
-        backgroundColor: "#176B87",
+        // backgroundColor: "#176B87",
+        backgroundColor: "#018553",
       }}
     >
-      <StatusBar translucent={false} backgroundColor="#176B87" />
+      <StatusBar
+        translucent={false}
+        // backgroundColor="#176B87"
+        backgroundColor="#018553"
+        barStyle="light-content"
+      />
       <View
         style={{
           flex: 1,
@@ -89,7 +99,7 @@ export default function Home() {
             style={{
               width: "50%",
               textAlign: "center",
-              backgroundColor: isUpdates ? "#176B87" : "whitesmoke",
+              backgroundColor: isUpdates ? "#018553" : "whitesmoke",
               borderRadius: 48,
               flex: 1,
               height: "75%",
@@ -99,7 +109,7 @@ export default function Home() {
           >
             <Text
               style={{
-                color: isUpdates ? "whitesmoke" : "#176B87",
+                color: isUpdates ? "whitesmoke" : "#018553",
                 fontFamily: "Poppins-Regular",
               }}
             >
@@ -111,7 +121,7 @@ export default function Home() {
             style={{
               width: "50%",
               textAlign: "center",
-              backgroundColor: isUpdates ? "whitesmoke" : "#176B87",
+              backgroundColor: isUpdates ? "whitesmoke" : "#018553",
               borderRadius: 48,
               flex: 1,
               height: "75%",
@@ -123,7 +133,7 @@ export default function Home() {
             <Icon
               name="truck"
               type="fontisto"
-              color={isUpdates ? "#176B87" : "whitesmoke"}
+              color={isUpdates ? "#018553" : "whitesmoke"}
             />
             {/* <Text style={{ color: "gray", marginLeft: 4 }}>Truck</Text> */}
           </Pressable>
@@ -135,8 +145,8 @@ export default function Home() {
           flex: 9,
           width: "100%",
           alignItems: "center",
-          borderTopRightRadius: 40,
-          borderTopLeftRadius: 40,
+          borderTopRightRadius: 20,
+          borderTopLeftRadius: 20,
           paddingVertical: 10,
           // changes PH for update tabs
           paddingHorizontal: 10,
@@ -144,7 +154,7 @@ export default function Home() {
       >
         {isUpdates ? (
           <ScrollView
-            style={{ borderRadius: 48 }}
+            style={{ borderRadius: 48, flex: 1 }}
             showsVerticalScrollIndicator={false}
             overScrollMode="never"
           >
@@ -223,10 +233,10 @@ export default function Home() {
                     style={{
                       width: "100%",
                       height: showOver ? "100%" : 125,
-                      borderRadius: 35,
+                      borderRadius: 20,
                       paddingVertical: 10,
                       paddingHorizontal: 14,
-                      backgroundColor: "tomato",
+                      backgroundColor: "#D02626",
                       flexDirection: "column",
                       marginBottom: 10,
                       elevation: 18,
@@ -363,73 +373,92 @@ export default function Home() {
                     //   onPress={() => console.log("Pressed!!")}
                     style={{
                       width: "100%",
-                      height: 125,
-                      borderRadius: 35,
+                      // height: 125,
+                      // height: 100,
+                      borderRadius: 20,
+                      // paddingVertical: 10,
                       paddingVertical: 10,
                       paddingHorizontal: 15,
                       backgroundColor: "white",
                       // backgroundColor: "rgba(23, 107, 135, 0.32)",
-                      flexDirection: "column",
-                      elevation: 18,
+                      flexDirection: "row",
+                      elevation: 50,
                       shadowColor: "#D9D9D9",
                       marginBottom: 10,
+                      justifyContent: "space-evenly",
+                      alignItems: "center",
                     }}
                   >
-                    <Text
-                      style={{
-                        color: "#808080",
-                        // color: "white",
-                        alignSelf: "flex-start",
-                        fontFamily: "Poppins-Regular",
-                        // fontWeight: "bold",
-                        fontSize: 22,
-                        //   height: "10%",
-                      }}
-                    >
-                      {/* Ga-Makanye */}
-                      {update.location}
-                    </Text>
                     <View
                       style={{
-                        flex: 1,
-                        //   backgroundColor: "red",
-                        alignItems: "flex-end",
-                        flexDirection: "row",
+                        width: 50,
+                        height: 50,
+                        padding: 20,
+                        // backgroundColor: "red",
+                        borderWidth: 1,
+                        borderColor: "gray",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        borderRadius: 100,
                       }}
                     >
+                      <Image
+                        source={require("../../assets/Images/truck.png")}
+                        style={{
+                          borderRadius: 100,
+                          width: 20,
+                          resizeMode: "contain",
+                        }}
+                      />
+                    </View>
+                    <View
+                      style={{
+                        width: "60%",
+                        padding: 10,
+                        // backgroundColor: "yellow",
+                        flexDirection: "column",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <Text
+                        style={{
+                          fontSize: 20,
+                          fontFamily: "Poppins-Medium",
+                          marginLeft: 10,
+                        }}
+                      >
+                        {update.location}
+                      </Text>
                       <Text
                         style={{
                           fontSize: 16,
                           fontFamily: "Poppins-Regular",
                           color: "gray",
-                          width: "80%",
+                          marginLeft: 10,
                         }}
                       >
-                        {/* Tue, 12 Nov 2023 */}
+                        {update.time}
+                      </Text>
+                    </View>
+                    <View
+                      style={{
+                        width: "30%",
+                        // height: 50,
+                        padding: 5,
+                        backgroundColor: "#C3AE2E",
+                        borderRadius: 8,
+
+                        justifyContent: "center",
+                        alignItems: "center",
+                      }}
+                    >
+                      <Text
+                        style={{
+                          color: "whitesmoke",
+                        }}
+                      >
                         {update.dayOfWeek}
                       </Text>
-                      <View
-                        style={{
-                          paddingVertical: 4,
-                          paddingHorizontal: 10,
-                          backgroundColor: "#176B87",
-                          borderRadius: 18,
-                          justifyContent: "center",
-                          alignItems: "center",
-                          width: "20%",
-                        }}
-                      >
-                        <Text
-                          style={{
-                            fontFamily: "Poppins-Regular",
-                            fontSize: 15,
-                            color: "whitesmoke",
-                          }}
-                        >
-                          {/* 15:00 */}
-                          {update.time}
-                        </Text>
-                      </View>
                     </View>
                   </View>
                 );

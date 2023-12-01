@@ -1,4 +1,4 @@
-import { View, Text } from "react-native";
+import { View, Text, ImageBackground, Pressable } from "react-native";
 import React from "react";
 import { StatusBar } from "react-native";
 import { useCallback } from "react";
@@ -41,7 +41,7 @@ export default function Onboarding({ navigation }) {
   };
 
   return (
-    <View
+    <ImageBackground
       style={{
         flex: 1,
         backgroundColor: "white",
@@ -50,34 +50,79 @@ export default function Onboarding({ navigation }) {
         flexDirection: "column",
       }}
       onLayout={handleOnLayout}
+      source={require("../../assets/Images/onboarding.jpg")}
     >
+      <StatusBar
+        translucent={false}
+        backgroundColor="transparent"
+        barStyle="dark-content"
+      />
       <View
         style={{
-          width: 350,
-          height: 350,
-          backgroundColor: "red",
-          borderRadius: 100,
-          padding: 2,
-          justifyContent: "center",
-          alignItems: "center",
+          backgroundColor: "rgba(0, 0, 0, 0.55)",
+          flex: 1,
+          width: "100%",
         }}
       >
-        <Image
-          source={require("../../assets/Images/onboarding.jpg")}
-          //   source={require(`${currentImage}`)}
+        <View
           style={{
-            width: 350,
-            height: 350,
-            borderRadius: 100,
-            resizeMode: "center",
-            borderColor: "red",
-            borderWidth: 1,
+            flex: 3,
+            //   width: "100%",
+            justifyContent: "flex-end",
+            alignItems: "center",
           }}
-        />
+        >
+          <Text
+            style={{
+              color: "whitesmoke",
+              fontSize: 20,
+              textAlign: "center",
+              marginBottom: 20,
+              fontFamily: "Poppins-Regular",
+            }}
+          >
+            Stay Informed and Connected with{" "}
+            <Text
+              style={{
+                color: "#C3AE2E",
+                // fontWeight: "bold",
+                fontSize: 24,
+                fontFamily: "Poppins-Bold",
+              }}
+            >
+              Hydro Alert
+            </Text>
+          </Text>
+          <Text
+            style={{
+              color: "whitesmoke",
+              fontSize: 18,
+              textAlign: "center",
+              fontFamily: "Poppins-Regular",
+            }}
+          >
+            Never miss a water delivery again!
+          </Text>
+        </View>
+        <View
+          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+        >
+          {/* <Button title="next" onPress={() => navigation.navigate("Location")} /> */}
+          <Pressable
+            title="next"
+            // onPress={nextImage}
+            style={{
+              backgroundColor: "#018553",
+              paddingVertical: 12,
+              paddingHorizontal: 10,
+              borderRadius: 8,
+            }}
+            onPress={() => navigation.navigate("Location")}
+          >
+            <Text style={{ color: "whitesmoke" }}>Get Started</Text>
+          </Pressable>
+        </View>
       </View>
-      <Text>Onboarding</Text>
-      {/* <Button title="next" onPress={() => navigation.navigate("Location")} /> */}
-      <Button title="next" onPress={nextImage} />
-    </View>
+    </ImageBackground>
   );
 }
