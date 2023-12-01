@@ -169,7 +169,7 @@ export default function Location({ navigation }) {
         >
           <Text style={{ color: "whitesmoke", fontSize: 18 }}>Iraq</Text>
         </TouchableOpacity>
-        {/* <TouchableOpacity
+        <TouchableOpacity
           style={{
             width: "98%",
             height: 100,
@@ -183,7 +183,7 @@ export default function Location({ navigation }) {
           }
         >
           <Text style={{ color: "whitesmoke", fontSize: 18 }}>Ga-Mothiba</Text>
-        </TouchableOpacity> */}
+        </TouchableOpacity>
       </View>
     </View>
   );

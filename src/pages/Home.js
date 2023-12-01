@@ -89,9 +89,11 @@ export default function Home({ route }) {
             width: "100%",
             paddingHorizontal: 6,
             borderRadius: 48,
-            height: 60,
+            height: 40,
             justifyContent: "center",
             alignItems: "center",
+            elevation: 40,
+            shadowColor: "red",
           }}
         >
           <Pressable
