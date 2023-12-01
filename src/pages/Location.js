@@ -8,16 +8,16 @@ import {
   Alert,
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
-import axios from 'axios';
-import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
+import axios from "axios";
+import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 
+import { Entypo } from "@expo/vector-icons";
+import { Button } from "@rneui/base";
 
-import { Entypo } from '@expo/vector-icons'; 
-
-const SearchBar = () => {
+const SearchBar = ({ navigation }) => {
+  // const
   const [searchText, setSearchText] = useState("");
   const [location, setLocation] = useState(null);
-  
 
   const handleSearch = () => {
     console.log("Searching for:", searchText);
@@ -51,14 +51,21 @@ const SearchBar = () => {
             console.log(data, details);
           }}
           query={{
-            key: 'YOUR API KEY',
-            language: 'en',
+            key: "YOUR API KEY",
+            language: "en",
           }}
         />
       </View>
 
-      <Entypo name="location-pin" size={40} color="#176B87"  alignSelf="center"
-    alignItems= "center" marginTop={50} />
+      <Entypo
+        name="location-pin"
+        size={40}
+        color="#176B87"
+        alignSelf="center"
+        alignItems="center"
+        marginTop={50}
+      />
+      <Button title="next" onPress={() => navigation.navigate("Home")} />
     </View>
   );
 };
