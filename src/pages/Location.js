@@ -8,9 +8,6 @@ import {
   Alert,
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
-import axios from "axios";
-import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
-
 import { Entypo } from "@expo/vector-icons";
 import { Button } from "@rneui/base";
 
@@ -47,13 +44,6 @@ const SearchBar = ({ navigation }) => {
           color="black"
           value={searchText}
           onChangeText={(text) => setSearchText(text)}
-          onPress={(data, details = null) => {
-            console.log(data, details);
-          }}
-          query={{
-            key: "YOUR API KEY",
-            language: "en",
-          }}
         />
       </View>
 
