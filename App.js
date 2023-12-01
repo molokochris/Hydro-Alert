@@ -3,16 +3,23 @@ import { StyleSheet, Text, View } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Home from "./src/pages/Home";
-import Login from "./src/pages/Login";
-import Signup from "./src/pages/Signup";
-import Search from "./src/pages/Search";
 import Location from "./src/pages/Location";
-
+import Onboarding from "./src/pages/Onboarding";
+const Stack = createNativeStackNavigator();
 export default function App() {
-  const Stack = createNativeStackNavigator();
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Location">
+      <Stack.Navigator initialRouteName="Onboarding">
+        <Stack.Screen
+          name="Onboarding"
+          component={Onboarding}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Location"
+          component={Location}
+          options={{ headerShown: false }}
+        />
         <Stack.Screen
           name="Home"
           component={Home}
@@ -20,12 +27,6 @@ export default function App() {
         />
         {/* <Stack.Screen name="Login" component={Login} /> */}
         {/* <Stack.Screen name="Signup" component={Signup} /> */}
-        {/* <Stack.Screen name="Search" component={Search} /> */}
-        <Stack.Screen
-          name="Location"
-          component={Location}
-          options={{ headerShown: false }}
-        />
       </Stack.Navigator>
     </NavigationContainer>
   );
