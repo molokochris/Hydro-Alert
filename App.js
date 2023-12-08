@@ -5,6 +5,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Home from "./src/pages/Home";
 import Location from "./src/pages/Location";
 import Onboarding from "./src/pages/Onboarding";
+import HireForm from "./src/pages/HireForm";
 const Stack = createNativeStackNavigator();
 export default function App() {
   return (
@@ -25,7 +26,11 @@ export default function App() {
           component={Home}
           options={{ headerShown: false }}
         />
-        {/* <Stack.Screen name="Login" component={Login} /> */}
+        <Stack.Screen
+          name="Hire"
+          component={HireForm}
+          options={{ headerShown: false }}
+        />
         {/* <Stack.Screen name="Signup" component={Signup} /> */}
       </Stack.Navigator>
     </NavigationContainer>

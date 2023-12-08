@@ -1,22 +1,58 @@
-import { View, Text, ActivityIndicator, Image } from "react-native";
+import {
+  View,
+  Text,
+  ActivityIndicator,
+  Image,
+  TextInput,
+  TouchableOpacity,
+} from "react-native";
 import React, { useCallback, useState } from "react";
 import { StatusBar } from "react-native";
 import { Pressable } from "react-native";
 import { Icon } from "@rneui/themed";
 import * as SplashScreen from "expo-splash-screen";
 import { useFonts } from "expo-font";
-import { firestore } from "../firebase";
+import { Auth, firestore } from "../firebase";
+import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
 import { ScrollView } from "react-native";
 import { useEffect } from "react";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import WebView from "react-native-webview";
 
 SplashScreen.preventAutoHideAsync();
 
-export default function Home({ route }) {
+export default function Home({ navigation, route }) {
   const [showOver, setShowOver] = useState(false);
   const [isUpdates, setIsUpdates] = useState(false);
   const [updates, setUpdates] = useState();
+  const [isRegister, setIsRegister] = useState(false);
+  const [showMenu, setShowMenu] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   let userLocation = route.params.location;
+
+  const handleLogin = async () => {
+    try {
+      await Auth.signInWithEmailAndPassword(email, password);
+      // alert("signed In");
+      navigation.navigate("Hire");
+    } catch (error) {
+      console.log("error: ", error);
+    }
+    navigation.navigate("Hire");
+  };
+  const handleRegister = async () => {
+    try {
+      await Auth.createUserWithEmailAndPassword(email, password);
+      console.log(`email: ${email} & pass: ${password}`);
+      // alert("Success Registration");
+      // navigation.navigate("Hire");
+      setIsRegister(false);
+    } catch (error) {
+      console.log("error: ", error);
+    }
+  };
 
   // Fetch Data from Database
   useEffect(() => {
@@ -76,12 +112,169 @@ export default function Home({ route }) {
       <View
         style={{
           flex: 1,
+          position: "absolute",
+          zIndex: 2,
+          // backgroundColor: "yellow",
+          backgroundColor: "#018553",
+          paddingVertical: 20,
+          width: "100%",
+          // alignSelf: "flex-start",
+          top: 65,
+          // height: 250,
+          borderBottomEndRadius: 40,
+          borderBottomStartRadius: 40,
+          paddingHorizontal: 10,
+          // left: 10,
+          display: showMenu ? "flex" : "none",
+        }}
+      >
+        {isRegister ? (
+          <>
+            <TextInput
+              placeholder="email"
+              style={{
+                backgroundColor: "whitesmoke",
+                marginBottom: 10,
+                paddingVertical: 8,
+                paddingHorizontal: 14,
+                borderRadius: 16,
+              }}
+              textContentType="emailAddress"
+              // value={email}
+              onChangeText={(text) => setEmail(text)}
+            />
+            <TextInput
+              placeholder="password"
+              textContentType="password"
+              style={{
+                backgroundColor: "whitesmoke",
+                marginBottom: 10,
+                paddingVertical: 8,
+                paddingHorizontal: 14,
+                borderRadius: 16,
+              }}
+              // value={password}
+              onChangeText={(text) => setPassword(text)}
+            />
+            <TouchableOpacity
+              style={{
+                paddingVertical: 10,
+                paddingHorizontal: 14,
+                borderRadius: 16,
+                backgroundColor: "#C3AE2E",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+              onPress={handleRegister}
+            >
+              <Text style={{ color: "whitesmoke" }}>Register</Text>
+            </TouchableOpacity>
+            <Text
+              style={{
+                justifyContent: "center",
+                alignItems: "center",
+                paddingVertical: 10,
+                flex: 1,
+                alignSelf: "center",
+                fontSize: 15,
+              }}
+            >
+              Already have an account,{" "}
+              <Pressable
+                style={{ justifyContent: "center", alignItems: "center" }}
+                onPress={() => setIsRegister(false)}
+              >
+                <Text
+                  style={{
+                    color: "tomato",
+                  }}
+                >
+                  Sign in
+                </Text>
+              </Pressable>
+            </Text>
+          </>
+        ) : (
+          <>
+            <TextInput
+              placeholder="email"
+              style={{
+                backgroundColor: "whitesmoke",
+                marginBottom: 10,
+                paddingVertical: 8,
+                paddingHorizontal: 14,
+                borderRadius: 16,
+              }}
+            />
+            <TextInput
+              placeholder="password"
+              style={{
+                backgroundColor: "whitesmoke",
+                marginBottom: 10,
+                paddingVertical: 8,
+                paddingHorizontal: 14,
+                borderRadius: 16,
+              }}
+            />
+            <TouchableOpacity
+              style={{
+                paddingVertical: 10,
+                paddingHorizontal: 14,
+                borderRadius: 16,
+                backgroundColor: "#C3AE2E",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+              onPress={handleLogin}
+            >
+              <Text style={{ color: "whitesmoke" }}>Sign in</Text>
+            </TouchableOpacity>
+            <Text
+              style={{
+                justifyContent: "center",
+                alignItems: "center",
+                paddingVertical: 10,
+                flex: 1,
+                alignSelf: "center",
+                fontSize: 15,
+              }}
+            >
+              Don't have an account,{" "}
+              <Pressable
+                style={{ justifyContent: "center", alignItems: "center" }}
+                onPress={() => setIsRegister(true)}
+              >
+                <Text
+                  style={{
+                    color: "tomato",
+                  }}
+                >
+                  Register
+                </Text>
+              </Pressable>
+            </Text>
+          </>
+        )}
+      </View>
+      <View
+        style={{
+          flex: 1,
           paddingVertical: 30,
           paddingHorizontal: 40,
           justifyContent: "center",
           alignItems: "center",
         }}
       >
+        <View style={{ paddingVertical: 10 }}>
+          <Icon
+            name="chevron-down"
+            type="ionicon"
+            color="whitesmoke"
+            size={30}
+            onPress={() => setShowMenu(!showMenu)}
+          />
+        </View>
+
         <View
           style={{
             flexDirection: "row",
@@ -133,10 +326,18 @@ export default function Home({ route }) {
             }}
           >
             <Icon
+              // name="post"
               name="truck"
               type="fontisto"
+              // type=""
               color={isUpdates ? "#018553" : "whitesmoke"}
             />
+            {/* <MaterialCommunityIcons
+              name="post"
+              size={24}
+              color="black"
+              color={isUpdates ? "#018553" : "whitesmoke"}
+            /> */}
             {/* <Text style={{ color: "gray", marginLeft: 4 }}>Truck</Text> */}
           </Pressable>
         </View>
@@ -670,8 +871,12 @@ export default function Home({ route }) {
           <View
             style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
           >
-            <ActivityIndicator size="large" color="#176B87" />
-            <Text>Fetching Data</Text>
+            {/* <ActivityIndicator size="large" color="#176B87" /> */}
+            {/* <Text>Fetching Data</Text> */}
+            <WebView
+              source={{ uri: "https://www.facebook.com/WaterAndSanitationRSA" }}
+              style={{ flex: 1 }}
+            />
           </View>
         )}
       </View>
