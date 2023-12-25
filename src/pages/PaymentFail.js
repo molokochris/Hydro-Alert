@@ -1,10 +1,10 @@
 import { View, Text } from "react-native";
 import React from "react";
 
-export default function HomeUpdates() {
+export default function PaymentFail() {
   return (
     <View>
-      <Text>HomeUpdates</Text>
+      <Text>PaymentFail</Text>
     </View>
   );
 }

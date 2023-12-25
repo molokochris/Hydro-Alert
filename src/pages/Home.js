@@ -1,885 +1,566 @@
 import {
   View,
   Text,
-  ActivityIndicator,
-  Image,
-  TextInput,
+  Button,
+  StatusBar,
+  Pressable,
   TouchableOpacity,
+  ActivityIndicator,
+  Modal,
+  Dimensions,
+  PixelRatio,
 } from "react-native";
-import React, { useCallback, useState } from "react";
-import { StatusBar } from "react-native";
-import { Pressable } from "react-native";
-import { Icon } from "@rneui/themed";
-import * as SplashScreen from "expo-splash-screen";
-import { useFonts } from "expo-font";
-import { Auth, firestore } from "../firebase";
+import React, { useEffect, useState } from "react";
+import { createMaterialBottomTabs } from "@react-navigation/material-bottom-tabs";
+import { createDrawerNavigator } from "@react-navigation/drawer";
+import {
+  Entypo,
+  FontAwesome5,
+  Ionicons,
+  MaterialCommunityIcons,
+} from "@expo/vector-icons";
+import Profile from "./Profile";
+import Settings from "./Settings";
+import HireForm from "./HireForm";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { LinearGradient } from "expo-linear-gradient";
+import { Auth, firestore } from "../firebase/firebase";
 import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
+import { Alert } from "react-native";
 import { ScrollView } from "react-native";
-import { useEffect } from "react";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import WebView from "react-native-webview";
-
-SplashScreen.preventAutoHideAsync();
 
 export default function Home({ navigation, route }) {
-  const [showOver, setShowOver] = useState(false);
+  const [sidemenu, setSideMenu] = useState(false);
   const [isUpdates, setIsUpdates] = useState(false);
   const [updates, setUpdates] = useState();
-  const [isRegister, setIsRegister] = useState(false);
-  const [showMenu, setShowMenu] = useState(false);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [modalVisible, setModalVisible] = useState(false);
 
-  let userLocation = route.params.location;
+  const { width } = Dimensions.get("window");
+  const fontScale = 0.85;
 
-  const handleLogin = async () => {
-    try {
-      await Auth.signInWithEmailAndPassword(email, password);
-      // alert("signed In");
-      navigation.navigate("Hire");
-    } catch (error) {
-      console.log("error: ", error);
-    }
-    navigation.navigate("Hire");
+  const calculateFontSize = (baseFont) => {
+    const adjustFontSize = PixelRatio.roundToNearestPixel(
+      (baseFont * width * fontScale) / 360
+    );
+
+    return adjustFontSize;
   };
-  const handleRegister = async () => {
-    try {
-      await Auth.createUserWithEmailAndPassword(email, password);
-      console.log(`email: ${email} & pass: ${password}`);
-      // alert("Success Registration");
-      // navigation.navigate("Hire");
-      setIsRegister(false);
-    } catch (error) {
-      console.log("error: ", error);
-    }
-  };
+
+  const location = route.params.location;
+  const userID = route.params.userID;
 
   // Fetch Data from Database
   useEffect(() => {
     setIsUpdates(false);
+
     const fetchUpdates = async () => {
+      console.log(userID);
       try {
-        const updatesRef = firestore.collection(`${userLocation}`);
-        // const updatesRef = firestore.collection("Polokwane");
+        const updatesRef = firestore.collection(`${location}`);
         const snapshot = await updatesRef.get();
+
+        const userProfDoc = await firestore
+          .collection("users")
+          // .doc(`${userID}`)
+          .doc("ZoJTd7sHYfPzUnVPI1DcxAJSBIn2")
+          .get();
+
+        const userProfData = userProfDoc.exists ? userProfDoc.data() : {}; // Provide an empty object if the document doesn't exist
+
         const updatesData = snapshot.docs.map((doc) => ({
           id: doc.id,
           ...doc.data(),
         }));
         setUpdates(updatesData);
+
+        console.log("Updates Data: ", updatesData);
+        console.log("User Profile: ", userProfData);
+
         setIsUpdates(true);
-        console.log(updatesData);
       } catch (error) {
-        console.error("Error fetching updates:", error);
+        console.error("Error fetching updates:", error.message);
       }
     };
-    fetchUpdates();
-    console.log(userLocation);
-  }, []);
-  // fonts
-  const [isLoaded] = useFonts({
-    "Poppins-Black": require("../../assets/fonts/Poppins-Black.ttf"),
-    "Poppins-Bold": require("../../assets/fonts/Poppins-Bold.ttf"),
-    "Poppins-Regular": require("../../assets/fonts/Poppins-Regular.ttf"),
-    "Poppins-Medium": require("../../assets/fonts/Poppins-Medium.ttf"),
-  });
-  const handleOnLayout = useCallback(async () => {
-    if (isLoaded) {
-      await SplashScreen.hideAsync(); //hide the splashscreen
-    }
-  }, [isLoaded]);
-  if (!isLoaded) {
-    return null;
-  }
 
-  return (
-    <View
-      onLayout={handleOnLayout}
-      style={{
-        flex: 1,
-        // justifyContent: "center",
-        alignItems: "center",
-        // backgroundColor: "#176B87",
-        backgroundColor: "#018553",
-      }}
+    fetchUpdates();
+  }, [location, userID]);
+  // console.log(route.params.location);
+  return isUpdates ? (
+    <LinearGradient
+      style={{ flex: 1 }}
+      colors={["#005BEA", "#000000", "#000000"]}
     >
       <StatusBar
-        translucent={false}
-        // backgroundColor="#176B87"
-        backgroundColor="#018553"
         barStyle="light-content"
+        backgroundColor="transparent"
+        // backgroundColor="#111111"
+        translucent={true}
       />
       <View
         style={{
           flex: 1,
-          position: "absolute",
-          zIndex: 2,
+          alignItems: "flex-end",
+          justifyContent: "space-between",
+          flexDirection: "row",
           // backgroundColor: "yellow",
-          backgroundColor: "#018553",
-          paddingVertical: 20,
-          width: "100%",
-          // alignSelf: "flex-start",
-          top: 65,
-          // height: 250,
-          borderBottomEndRadius: 40,
-          borderBottomStartRadius: 40,
-          paddingHorizontal: 10,
-          // left: 10,
-          display: showMenu ? "flex" : "none",
+          paddingTop: 25,
         }}
       >
-        {isRegister ? (
-          <>
-            <TextInput
-              placeholder="email"
-              style={{
-                backgroundColor: "whitesmoke",
-                marginBottom: 10,
-                paddingVertical: 8,
-                paddingHorizontal: 14,
-                borderRadius: 16,
-              }}
-              textContentType="emailAddress"
-              // value={email}
-              onChangeText={(text) => setEmail(text)}
-            />
-            <TextInput
-              placeholder="password"
-              textContentType="password"
-              style={{
-                backgroundColor: "whitesmoke",
-                marginBottom: 10,
-                paddingVertical: 8,
-                paddingHorizontal: 14,
-                borderRadius: 16,
-              }}
-              // value={password}
-              onChangeText={(text) => setPassword(text)}
-            />
-            <TouchableOpacity
-              style={{
-                paddingVertical: 10,
-                paddingHorizontal: 14,
-                borderRadius: 16,
-                backgroundColor: "#C3AE2E",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-              onPress={handleRegister}
-            >
-              <Text style={{ color: "whitesmoke" }}>Register</Text>
-            </TouchableOpacity>
-            <Text
-              style={{
-                justifyContent: "center",
-                alignItems: "center",
-                paddingVertical: 10,
-                flex: 1,
-                alignSelf: "center",
-                fontSize: 15,
-              }}
-            >
-              Already have an account,{" "}
-              <Pressable
-                style={{ justifyContent: "center", alignItems: "center" }}
-                onPress={() => setIsRegister(false)}
-              >
-                <Text
-                  style={{
-                    color: "tomato",
-                  }}
-                >
-                  Sign in
-                </Text>
-              </Pressable>
-            </Text>
-          </>
-        ) : (
-          <>
-            <TextInput
-              placeholder="email"
-              style={{
-                backgroundColor: "whitesmoke",
-                marginBottom: 10,
-                paddingVertical: 8,
-                paddingHorizontal: 14,
-                borderRadius: 16,
-              }}
-            />
-            <TextInput
-              placeholder="password"
-              style={{
-                backgroundColor: "whitesmoke",
-                marginBottom: 10,
-                paddingVertical: 8,
-                paddingHorizontal: 14,
-                borderRadius: 16,
-              }}
-            />
-            <TouchableOpacity
-              style={{
-                paddingVertical: 10,
-                paddingHorizontal: 14,
-                borderRadius: 16,
-                backgroundColor: "#C3AE2E",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-              onPress={handleLogin}
-            >
-              <Text style={{ color: "whitesmoke" }}>Sign in</Text>
-            </TouchableOpacity>
-            <Text
-              style={{
-                justifyContent: "center",
-                alignItems: "center",
-                paddingVertical: 10,
-                flex: 1,
-                alignSelf: "center",
-                fontSize: 15,
-              }}
-            >
-              Don't have an account,{" "}
-              <Pressable
-                style={{ justifyContent: "center", alignItems: "center" }}
-                onPress={() => setIsRegister(true)}
-              >
-                <Text
-                  style={{
-                    color: "tomato",
-                  }}
-                >
-                  Register
-                </Text>
-              </Pressable>
-            </Text>
-          </>
-        )}
+        <TouchableOpacity
+          onPress={() => setSideMenu(true)}
+          style={{
+            width: 35,
+            height: 35,
+            // backgroundColor: "rbga(0,0,0,0.5)",
+            // borderWidth: 1,
+            // borderColor: "whitesmoke",
+            // marginRight: 5,
+            justifyContent: "center",
+            alignItems: "center",
+            borderRadius: 100,
+          }}
+        >
+          <Entypo name="menu" size={25} color="whitesmoke" />
+        </TouchableOpacity>
+        <Pressable
+          style={{
+            width: 35,
+            height: 35,
+            // backgroundColor: "rbga(0,0,0,0.5)",
+            borderWidth: 1,
+            borderColor: "whitesmoke",
+            marginRight: 5,
+            justifyContent: "center",
+            alignItems: "center",
+            borderRadius: 100,
+          }}
+          onPress={() => navigation.navigate("Store")}
+        >
+          {/* <Text>FF</Text> */}
+          <FontAwesome5 name="store" size={16} color="whitesmoke" />
+          {/* <Button title="Store"  /> */}
+        </Pressable>
+      </View>
+      <View style={{ flex: 9, alignItems: "center" }}>
+        <View
+          style={{
+            justifyContent: "center",
+            alignItems: "center",
+            paddingVertical: 25,
+          }}
+        >
+          {/* <Text style={{ fontSize: 14, fontWeight: "normal", color: "white" }}>
+            Location:
+          </Text> */}
+          <Ionicons name="ios-location" size={16} color="tomato" />
+          <Text
+            style={{
+              fontSize: 16,
+              fontWeight: "400",
+              color: "whitesmoke",
+              marginBottom: "2%",
+              marginTop: 5,
+              fontFamily: "Poppins-Regular",
+            }}
+          >
+            {/* Polokwane, Mankweng, Unit-E */}
+            {updates[0].location}
+          </Text>
+        </View>
+        <View style={{ justifyContent: "center", alignItems: "center" }}>
+          <Text
+            style={{
+              fontSize: 14,
+              fontWeight: "400",
+              color: "#BDBDBD",
+              fontFamily: "Poppins-Regular",
+            }}
+          >
+            Next Delivery
+          </Text>
+          <Text
+            style={{
+              // fontSize: 64,
+              fontSize: calculateFontSize(60),
+              fontWeight: "bold",
+              color: "whitesmoke",
+              fontFamily: "Poppins-Regular",
+            }}
+          >
+            {/* Mon */}
+            {updates[0].dayOfWeek}
+          </Text>
+          <Text
+            style={{
+              fontSize: calculateFontSize(60),
+              fontWeight: "bold",
+              color: "whitesmoke",
+              fontFamily: "Poppins-Regular",
+            }}
+          >
+            13 Oct 23
+          </Text>
+          <Text
+            style={{
+              fontSize: calculateFontSize(60),
+              fontWeight: "bold",
+              color: "whitesmoke",
+              fontFamily: "Poppins-Regular",
+            }}
+          >
+            {/* 14:50 */}
+            {updates[0].time}
+          </Text>
+        </View>
       </View>
       <View
         style={{
-          flex: 1,
-          paddingVertical: 30,
-          paddingHorizontal: 40,
+          flex: 5,
+          // backgroundColor: "red",
           justifyContent: "center",
           alignItems: "center",
         }}
       >
-        <View style={{ paddingVertical: 10 }}>
-          <Icon
-            name="chevron-down"
-            type="ionicon"
-            color="whitesmoke"
-            size={30}
-            onPress={() => setShowMenu(!showMenu)}
-          />
-        </View>
-
+        <Pressable
+          style={{
+            width: "80%",
+            // height: 100,
+            backgroundColor: "#90C418",
+            borderRadius: 8,
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "space-around",
+          }}
+          onPress={() => setModalVisible(true)}
+        >
+          <Text
+            style={{
+              fontWeight: "bold",
+              fontSize: calculateFontSize(26),
+              color: "whitesmoke",
+              fontFamily: "Poppins-Regular",
+              marginBottom: "10%",
+            }}
+          >
+            Emergency Alert
+          </Text>
+          <Text style={{ color: "#BDBDBD", fontFamily: "Poppins-Regular" }}>
+            20 sec ago
+          </Text>
+        </Pressable>
+      </View>
+      {/* <Text>Home</Text> */}
+      {sidemenu && (
         <View
           style={{
-            flexDirection: "row",
-            backgroundColor: "whitesmoke",
+            flex: 1,
+            // justifyContent: "center",
+            // alignItems: "center",
+            position: "absolute",
+            zIndex: 2,
+            backgroundColor: "rgba(0,0,0,0.4)",
+            height: "100%",
             width: "100%",
-            paddingHorizontal: 6,
-            borderRadius: 48,
-            height: 40,
-            justifyContent: "center",
+          }}
+        >
+          <View
+            style={{
+              flex: 1,
+              width: "80%",
+              backgroundColor: "black",
+              paddingVertical: 20,
+              paddingHorizontal: 10,
+            }}
+          >
+            <View
+              style={{
+                flex: 2,
+                justifyContent: "center",
+                alignItems: "center",
+                flexDirection: "column",
+                // borderBottomWidth: 1,
+                // borderBottomColor: "#BDBDBD",
+              }}
+            >
+              <View
+                style={{
+                  width: 100,
+                  height: 100,
+                  backgroundColor: "whitesmoke",
+                  borderRadius: 100,
+                  marginBottom: 20,
+                }}
+              ></View>
+              <View>
+                <Text style={{ color: "#BDBDBD" }}>molokochrisp742@gmail</Text>
+              </View>
+            </View>
+            <View style={{ flex: 3, paddingTop: 20 }}>
+              <Pressable
+                onPress={() => navigation.navigate("User Profile")}
+                style={{
+                  borderWidth: 1,
+                  borderColor: "whitesmoke",
+                  marginBottom: 10,
+                  paddingVertical: 10,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  borderRadius: 8,
+                }}
+              >
+                <Text style={{ color: "whitesmoke" }}>Profile</Text>
+              </Pressable>
+              <Pressable
+                onPress={() => navigation.navigate("Hire")}
+                style={{
+                  borderWidth: 1,
+                  borderColor: "whitesmoke",
+                  marginBottom: 10,
+                  paddingVertical: 10,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  borderRadius: 8,
+                }}
+              >
+                <Text title="Hire Form" style={{ color: "whitesmoke" }}>
+                  Hire Form
+                </Text>
+              </Pressable>
+              <Pressable
+                onPress={() => navigation.navigate("Orders")}
+                style={{
+                  borderWidth: 1,
+                  borderColor: "whitesmoke",
+                  marginBottom: 10,
+                  paddingVertical: 10,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  borderRadius: 8,
+                }}
+              >
+                <Text title="Orders" style={{ color: "whitesmoke" }}>
+                  Orders
+                </Text>
+              </Pressable>
+              <Pressable
+                onPress={() => navigation.navigate("Settings")}
+                style={{
+                  borderWidth: 1,
+                  borderColor: "whitesmoke",
+                  marginBottom: 10,
+                  paddingVertical: 10,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  borderRadius: 8,
+                }}
+              >
+                <Text title="Settings" style={{ color: "whitesmoke" }}>
+                  Settings
+                </Text>
+              </Pressable>
+            </View>
+            <View style={{ flex: 1, justifyContent: "flex-end" }}>
+              {/* <Entypo
+                style={{ alignSelf: "flex-end" }}
+                color="whitesmoke"
+                name="cross"
+                size={25}
+              /> */}
+              <TouchableOpacity
+                style={{
+                  backgroundColor: "whitesmoke",
+                  paddingVertical: 10,
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+                onPress={() => setSideMenu(false)}
+              >
+                <Text>Close</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      )}
+      {/* // Modal */}
+      {/* <View style={{ flex: 1, backgroundColor: "green", zIndex: 1,ab }}> */}
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          Alert.alert("modal closed");
+          setModalVisible(!modalVisible);
+        }}
+      >
+        <LinearGradient
+          colors={[
+            "#90C418",
+            "#018553",
+            "#111111",
+            "#000000",
+            "#111111",
+            "#018553",
+            "#90C418",
+          ]}
+          style={{
+            alignSelf: "center",
+            flex: 1,
+            // height: 500,
+            // justifyContent: "center",
             alignItems: "center",
-            elevation: 40,
-            shadowColor: "red",
+            padding: 10,
+            // backgroundColor: "whitesmoke",
           }}
         >
           <Pressable
-            onPress={() => setIsUpdates(true)}
             style={{
-              width: "50%",
+              alignSelf: "flex-end",
+              borderRadius: 100,
+              height: 35,
+              width: 35,
+              borderColor: "whitesmoke",
+              borderWidth: 1,
               textAlign: "center",
-              backgroundColor: isUpdates ? "#018553" : "whitesmoke",
-              borderRadius: 48,
-              flex: 1,
-              height: "75%",
               justifyContent: "center",
               alignItems: "center",
             }}
+            onPress={() => setModalVisible(!modalVisible)}
           >
-            <Text
-              style={{
-                color: isUpdates ? "whitesmoke" : "#018553",
-                fontFamily: "Poppins-Regular",
-              }}
-            >
-              Updates
-            </Text>
-          </Pressable>
-          <Pressable
-            onPress={() => setIsUpdates(false)}
-            style={{
-              width: "50%",
-              textAlign: "center",
-              backgroundColor: isUpdates ? "whitesmoke" : "#018553",
-              borderRadius: 48,
-              flex: 1,
-              height: "75%",
-              justifyContent: "center",
-              alignItems: "center",
-              flexDirection: "row",
-            }}
-          >
-            <Icon
-              // name="post"
-              name="truck"
-              type="fontisto"
-              // type=""
-              color={isUpdates ? "#018553" : "whitesmoke"}
+            <MaterialCommunityIcons
+              name="window-close"
+              size={26}
+              color="whitesmoke"
             />
-            {/* <MaterialCommunityIcons
-              name="post"
-              size={24}
-              color="black"
-              color={isUpdates ? "#018553" : "whitesmoke"}
-            /> */}
-            {/* <Text style={{ color: "gray", marginLeft: 4 }}>Truck</Text> */}
           </Pressable>
-        </View>
-      </View>
-      <View
-        style={{
-          backgroundColor: "whitesmoke",
-          flex: 9,
-          width: "100%",
-          alignItems: "center",
-          borderTopRightRadius: 20,
-          borderTopLeftRadius: 20,
-          paddingVertical: 10,
-          // changes PH for update tabs
-          paddingHorizontal: 10,
-        }}
-      >
-        {isUpdates ? (
           <ScrollView
-            style={{ borderRadius: 48, flex: 1 }}
-            showsVerticalScrollIndicator={false}
-            overScrollMode="never"
+            style={{ flex: 1 }}
+            showsVerticalScrollIndicator={true}
+            indicatorStyle="whitesmoke"
           >
-            {/* <Pressable
-              onPress={() => setShowOver(!showOver)}
-              style={{
-                width: "100%",
-                height: showOver ? "100%" : 125,
-                borderRadius: 35,
-                paddingVertical: 10,
-                paddingHorizontal: 14,
-                backgroundColor: "tomato",
-                flexDirection: "column",
-                marginBottom: 10,
-                elevation: 18,
-                shadowColor: "#D9D9D9",
-                zIndex: showOver ? 2 : 1,
-                position: showOver ? "absolute" : "none",
-              }}
-            >
+            <View style={{ flex: 1, alignItems: "center", paddingBottom: 10 }}>
               <Text
                 style={{
                   color: "whitesmoke",
-                  alignSelf: "center",
                   fontFamily: "Poppins-Bold",
-                  fontSize: 22,
-                  //   height: "10%",
+                  marginBottom: 20,
                 }}
               >
-                Emergency Alert
+                Emergency Update:
               </Text>
-              <View
-                style={{
-                  flexDirection: "row",
-                  //   backgroundColor: "blue",
-                  height: "80%",
-                }}
-              >
-                <View style={{ width: "80%", padding: 4 }}>
-                  <Text
-                    style={{
-                      height: "100%",
-                      color: "whitesmoke",
-                      paddingVertical: 8,
-                    }}
-                  >
-                    Minim ea aliqua aute eiusmod voluptate adipisicing in mollit
-                    excepteur cupidatat ipsum tempor. Fugiat est dolor elit
-                    laboris ullamco irure sunt commodo ut duis nostrud enim.
-                  </Text>
-                </View>
-                <View
-                  style={{
-                    width: "20%",
-                    height: 30,
-                    backgroundColor: "whitesmoke",
-                    borderRadius: 18,
-                    paddingVertical: 4,
-                    paddingHorizontal: 2,
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <Text style={{ fontFamily: "Poppins-Regular" }}>15 : 00</Text>
-                </View>
-              </View>
-            </Pressable> */}
-            {updates
-              .filter((update) => {
-                return update.notificationType === "emergency";
-              })
-              .map((update) => {
-                return (
-                  <Pressable
-                    onPress={() => setShowOver(!showOver)}
-                    style={{
-                      width: "100%",
-                      height: showOver ? "100%" : 125,
-                      borderRadius: 20,
-                      paddingVertical: 10,
-                      paddingHorizontal: 14,
-                      backgroundColor: "#D02626",
-                      flexDirection: "column",
-                      marginBottom: 10,
-                      elevation: 18,
-                      shadowColor: "#D9D9D9",
-                      zIndex: showOver ? 2 : 1,
-                      position: showOver ? "absolute" : "none",
-                    }}
-                  >
-                    <Text
-                      style={{
-                        color: "whitesmoke",
-                        alignSelf: "center",
-                        fontFamily: "Poppins-Bold",
-                        fontSize: 22,
-                        //   height: "10%",
-                      }}
-                    >
-                      Emergency Alert
-                    </Text>
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        //   backgroundColor: "blue",
-                        height: "80%",
-                      }}
-                    >
-                      <View style={{ width: "80%", padding: 4 }}>
-                        <Text
-                          style={{
-                            height: "100%",
-                            color: "whitesmoke",
-                            paddingVertical: 8,
-                          }}
-                        >
-                          {/* Minim ea aliqua aute eiusmod voluptate adipisicing in
-                          mollit excepteur cupidatat ipsum tempor. Fugiat est
-                          dolor elit laboris ullamco irure sunt commodo ut duis
-                          nostrud enim. */}
-                          {update.message}
-                        </Text>
-                      </View>
-                      <View
-                        style={{
-                          width: "20%",
-                          height: 30,
-                          backgroundColor: "whitesmoke",
-                          borderRadius: 18,
-                          paddingVertical: 4,
-                          paddingHorizontal: 2,
-                          justifyContent: "center",
-                          alignItems: "center",
-                        }}
-                      >
-                        <Text style={{ fontFamily: "Poppins-Regular" }}>
-                          {/* 15 : 00 */}
-                          {update.time}
-                        </Text>
-                      </View>
-                    </View>
-                  </Pressable>
-                );
-              })}
-            {/* <View
-              //   onPress={() => console.log("Pressed!!")}
-              style={{
-                width: "100%",
-                height: 125,
-                borderRadius: 35,
-                paddingVertical: 10,
-                paddingHorizontal: 15,
-                backgroundColor: "#D9D9D9",
-                flexDirection: "column",
-                marginBottom: 10,
-              }}
-            >
-              <Text
-                style={{
-                  color: "#808080",
-                  alignSelf: "flex-start",
-                  fontFamily: "Poppins-Regular",
-                  fontSize: 22,
-                  //   height: "10%",
-                }}
-              >
-                Ga-Makanye
+              <Text style={{ color: "whitesmoke", marginBottom: 25 }}>
+                Water Delivery Delay Attention Residents of Tsisintsi
               </Text>
-              <View
-                style={{
-                  flex: 1,
-                  //   backgroundColor: "red",
-                  alignItems: "flex-end",
-                  flexDirection: "row",
-                }}
-              >
-                <Text
-                  style={{
-                    fontSize: 16,
-                    fontFamily: "Poppins-Regular",
-                    color: "gray",
-                    width: "80%",
-                  }}
-                >
-                  Tue, 12 Nov 2023
-                </Text>
-                <View
-                  style={{
-                    paddingVertical: 4,
-                    paddingHorizontal: 10,
-                    backgroundColor: "gray",
-                    borderRadius: 18,
-                    justifyContent: "center",
-                    alignItems: "center",
-                    width: "20%",
-                  }}
-                >
-                  <Text
-                    style={{
-                      fontFamily: "Poppins-Regular",
-                      fontSize: 15,
-                    }}
-                  >
-                    15:00
-                  </Text>
-                </View>
-              </View>
-            </View> */}
-            {updates
-              .filter((update) => {
-                return update.notificationType === "normal";
-              })
-              .map((update) => {
-                return (
-                  <View
-                    //   onPress={() => console.log("Pressed!!")}
-                    style={{
-                      width: "100%",
-                      // height: 125,
-                      // height: 100,
-                      borderRadius: 20,
-                      // paddingVertical: 10,
-                      paddingVertical: 10,
-                      paddingHorizontal: 15,
-                      backgroundColor: "white",
-                      // backgroundColor: "rgba(23, 107, 135, 0.32)",
-                      flexDirection: "row",
-                      elevation: 50,
-                      shadowColor: "#D9D9D9",
-                      marginBottom: 10,
-                      justifyContent: "space-evenly",
-                      alignItems: "center",
-                    }}
-                  >
-                    <View
-                      style={{
-                        width: 50,
-                        height: 50,
-                        padding: 20,
-                        // backgroundColor: "red",
-                        borderWidth: 0.5,
-                        borderColor: "gray",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        borderRadius: 100,
-                      }}
-                    >
-                      <Image
-                        source={require("../../assets/Images/truck.png")}
-                        style={{
-                          borderRadius: 100,
-                          width: 20,
-                          resizeMode: "contain",
-                        }}
-                      />
-                    </View>
-                    <View
-                      style={{
-                        width: "60%",
-                        padding: 10,
-                        // backgroundColor: "yellow",
-                        flexDirection: "column",
-                        justifyContent: "center",
-                      }}
-                    >
-                      <Text
-                        style={{
-                          fontSize: 20,
-                          fontFamily: "Poppins-Medium",
-                          marginLeft: 10,
-                        }}
-                      >
-                        {update.location}
-                      </Text>
-                      <Text
-                        style={{
-                          fontSize: 16,
-                          fontFamily: "Poppins-Regular",
-                          color: "gray",
-                          marginLeft: 10,
-                        }}
-                      >
-                        {update.time}
-                      </Text>
-                    </View>
-                    <View
-                      style={{
-                        width: "30%",
-                        // height: 50,
-                        padding: 5,
-                        backgroundColor: "#C3AE2E",
-                        borderRadius: 8,
-
-                        justifyContent: "center",
-                        alignItems: "center",
-                      }}
-                    >
-                      <Text
-                        style={{
-                          color: "whitesmoke",
-                        }}
-                      >
-                        {update.dayOfWeek}
-                      </Text>
-                    </View>
-                  </View>
-                );
-              })}
-            {/* <View
-              //   onPress={() => console.log("Pressed!!")}
-              style={{
-                width: "100%",
-                height: 125,
-                borderRadius: 35,
-                paddingVertical: 10,
-                paddingHorizontal: 15,
-                backgroundColor: "white",
-                flexDirection: "column",
-                elevation: 18,
-                shadowColor: "#D9D9D9",
-                marginBottom: 10,
-              }}
-            >
-              <Text
-                style={{
-                  color: "#808080",
-                  alignSelf: "flex-start",
-                  fontFamily: "Poppins-Regular",
-                  fontSize: 22,
-                  //   height: "10%",
-                }}
-              >
-                Ga-Makanye
+              <Text style={{ color: "whitesmoke", marginBottom: 40 }}>
+                Message: {updates[1] ? updates[1].message : "no message"}
               </Text>
-              <View
-                style={{
-                  flex: 1,
-                  //   backgroundColor: "red",
-                  alignItems: "flex-end",
-                  flexDirection: "row",
-                }}
-              >
-                <Text
-                  style={{
-                    fontSize: 16,
-                    fontFamily: "Poppins-Regular",
-                    color: "gray",
-                    width: "80%",
-                  }}
-                >
-                  Tue, 12 Nov 2023
-                </Text>
-                <View
-                  style={{
-                    paddingVertical: 4,
-                    paddingHorizontal: 10,
-                    backgroundColor: "#176B87",
-                    borderRadius: 18,
-                    justifyContent: "center",
-                    alignItems: "center",
-                    width: "20%",
-                  }}
-                >
-                  <Text
-                    style={{
-                      fontFamily: "Poppins-Regular",
-                      fontSize: 15,
-                      color: "whitesmoke",
-                    }}
-                  >
-                    15:00
-                  </Text>
-                </View>
-              </View>
-            </View> */}
-            {/* <View
-              //   onPress={() => console.log("Pressed!!")}
-              style={{
-                width: "100%",
-                height: 125,
-                borderRadius: 35,
-                paddingVertical: 10,
-                paddingHorizontal: 15,
-                backgroundColor: "white",
-                flexDirection: "column",
-                elevation: 18,
-                shadowColor: "#D9D9D9",
-                marginBottom: 10,
-              }}
-            >
-              <Text
-                style={{
-                  color: "#808080",
-                  alignSelf: "flex-start",
-                  fontFamily: "Poppins-Regular",
-                  fontSize: 22,
-                  //   height: "10%",
-                }}
-              >
-                Ga-Makanye
+              <Text style={{ color: "whitesmoke", textAlign: "center" }}>
+                This is an important update regarding your scheduled water
+                delivery. We understand the critical importance of access to
+                clean and safe water, especially during these challenging times.
+                Unfortunately, due to [brief explanation of reason for delay -
+                e.g., unforeseen repairs, equipment malfunction, extreme
+                weather], there will be a delay in your scheduled water
+                deliveries. What you can expect: Delivery delay: Deliveries will
+                be delayed by [approximate timeframe of delay - e.g., 2-4 hours,
+                until tomorrow morning]. Updated timing: We will provide updated
+                individual delivery times as soon as we have them. Please keep
+                an eye on your phones for SMS notifications or check our
+                website/app for the latest information. Emergency water: If you
+                are facing an immediate water shortage, please do not hesitate
+                to contact us at [phone number] or [alternative contact
+                information]. We have emergency water reserves available and
+                will prioritize delivery to those in critical need. We apologize
+                for any inconvenience this may cause. We are working diligently
+                to resolve the situation and resume regular deliveries as soon
+                as possible. Your water and well-being are our top priorities.
+                Please stay informed: Follow us on social media ([social media
+                links]) for real-time updates. Visit our website/app
+                ([website/app link]) for detailed information and resources.
+                Thank you for your understanding and cooperation. Sincerely, The
+                [Municipality Name] Water Delivery Team
               </Text>
-              <View
-                style={{
-                  flex: 1,
-                  //   backgroundColor: "red",
-                  alignItems: "flex-end",
-                  flexDirection: "row",
-                }}
-              >
-                <Text
-                  style={{
-                    fontSize: 16,
-                    fontFamily: "Poppins-Regular",
-                    color: "gray",
-                    width: "80%",
-                  }}
-                >
-                  Tue, 12 Nov 2023
-                </Text>
-                <View
-                  style={{
-                    paddingVertical: 4,
-                    paddingHorizontal: 10,
-                    backgroundColor: "#176B87",
-                    borderRadius: 18,
-                    justifyContent: "center",
-                    alignItems: "center",
-                    width: "20%",
-                  }}
-                >
-                  <Text
-                    style={{
-                      fontFamily: "Poppins-Regular",
-                      fontSize: 15,
-                      color: "whitesmoke",
-                    }}
-                  >
-                    15:00
-                  </Text>
-                </View>
-              </View>
-            </View> */}
-            {/* <View
-              //   onPress={() => console.log("Pressed!!")}
-              style={{
-                width: "100%",
-                height: 125,
-                borderRadius: 35,
-                paddingVertical: 10,
-                paddingHorizontal: 15,
-                backgroundColor: "white",
-                flexDirection: "column",
-                elevation: 18,
-                shadowColor: "#D9D9D9",
-              }}
-            >
-              <Text
-                style={{
-                  color: "#808080",
-                  alignSelf: "flex-start",
-                  fontFamily: "Poppins-Regular",
-                  fontSize: 22,
-                  //   height: "10%",
-                }}
-              >
-                Ga-Makanye
-              </Text>
-              <View
-                style={{
-                  flex: 1,
-                  //   backgroundColor: "red",
-                  alignItems: "flex-end",
-                  flexDirection: "row",
-                }}
-              >
-                <Text
-                  style={{
-                    fontSize: 16,
-                    fontFamily: "Poppins-Regular",
-                    color: "gray",
-                    width: "80%",
-                  }}
-                >
-                  Tue, 12 Nov 2023
-                </Text>
-                <View
-                  style={{
-                    paddingVertical: 4,
-                    paddingHorizontal: 10,
-                    backgroundColor: "#176B87",
-                    borderRadius: 18,
-                    justifyContent: "center",
-                    alignItems: "center",
-                    width: "20%",
-                  }}
-                >
-                  <Text
-                    style={{
-                      fontFamily: "Poppins-Regular",
-                      fontSize: 15,
-                      color: "whitesmoke",
-                    }}
-                  >
-                    15:00
-                  </Text>
-                </View>
-              </View>
-            </View> */}
+            </View>
           </ScrollView>
-        ) : (
-          <View
-            style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
-          >
-            {/* <ActivityIndicator size="large" color="#176B87" /> */}
-            {/* <Text>Fetching Data</Text> */}
-            <WebView
-              source={{ uri: "https://www.facebook.com/WaterAndSanitationRSA" }}
-              style={{ flex: 1 }}
-            />
-          </View>
-        )}
+        </LinearGradient>
+      </Modal>
+      {/* </View> */}
+    </LinearGradient>
+  ) : (
+    <LinearGradient
+      style={{ flex: 1 }}
+      colors={["#005BEA", "#000000", "#000000"]}
+    >
+      <StatusBar
+        barStyle="light-content"
+        backgroundColor="transparent"
+        // backgroundColor="#111111"
+        translucent={true}
+      />
+      <View
+        style={{
+          flex: 1,
+          alignItems: "flex-end",
+          justifyContent: "space-between",
+          flexDirection: "row",
+          // backgroundColor: "red",
+          paddingTop: 25,
+        }}
+      >
+        <TouchableOpacity
+          onPress={() => setSideMenu(true)}
+          style={{
+            width: 35,
+            height: 35,
+            // backgroundColor: "rbga(0,0,0,0.5)",
+            // borderWidth: 1,
+            // borderColor: "whitesmoke",
+            // marginRight: 5,
+            justifyContent: "center",
+            alignItems: "center",
+            borderRadius: 100,
+          }}
+        >
+          <Entypo name="menu" size={25} color="whitesmoke" />
+        </TouchableOpacity>
+        <Pressable
+          style={{
+            width: 35,
+            height: 35,
+            // backgroundColor: "rbga(0,0,0,0.5)",
+            borderWidth: 1,
+            borderColor: "whitesmoke",
+            marginRight: 5,
+            justifyContent: "center",
+            alignItems: "center",
+            borderRadius: 100,
+          }}
+          onPress={() => navigation.navigate("Store")}
+        >
+          {/* <Text>FF</Text> */}
+          <FontAwesome5 name="store" size={16} color="whitesmoke" />
+          {/* <Button title="Store"  /> */}
+        </Pressable>
       </View>
-    </View>
+      <View style={{ flex: 9, justifyContent: "center", alignItems: "center" }}>
+        <ActivityIndicator size={"large"} color="#005BEA" />
+      </View>
+      <View
+        style={{
+          flex: 5,
+          // backgroundColor: "red",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Pressable
+          style={{
+            width: "80%",
+            height: 100,
+            backgroundColor: "#90C418",
+            borderRadius: 8,
+          }}
+        ></Pressable>
+      </View>
+    </LinearGradient>
   );
 }

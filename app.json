@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Hydro-Alert",
-    "slug": "Hydro-Alert",
+    "name": "hydra-test-app",
+    "slug": "hydra-test-app",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",

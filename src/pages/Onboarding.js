@@ -53,9 +53,9 @@ export default function Onboarding({ navigation }) {
       source={require("../../assets/Images/onboarding.jpg")}
     >
       <StatusBar
-        translucent={false}
+        translucent={true}
         backgroundColor="transparent"
-        barStyle="dark-content"
+        barStyle="light-content"
       />
       <View
         style={{
@@ -117,7 +117,7 @@ export default function Onboarding({ navigation }) {
               paddingHorizontal: 10,
               borderRadius: 8,
             }}
-            onPress={() => navigation.navigate("Location")}
+            onPress={() => navigation.navigate("Login")}
           >
             <Text style={{ color: "whitesmoke" }}>Get Started</Text>
           </Pressable>

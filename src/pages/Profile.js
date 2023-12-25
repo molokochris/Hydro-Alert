@@ -9,7 +9,24 @@ import {
 } from "react-native";
 import React, { Children } from "react";
 import { Feather } from "@expo/vector-icons";
-import InputForm from "../components/InputForm";
+
+function InputForm(props) {
+  return (
+    <View
+      style={[
+        style.inputFieldContainer,
+        { width: props.width, marginBottom: 5 },
+        props.style,
+      ]}
+    >
+      <TextInput
+        placeholder={props.placeholder}
+        placeholderTextColor="#686868"
+        cursorColor="whitesmoke"
+      />
+    </View>
+  );
+}
 
 function Label(props) {
   return (
@@ -19,19 +36,37 @@ function Label(props) {
   );
 }
 
-export default function Hirefom() {
+export default function Profile() {
   return (
-    <View style={{ flex: 1, backgroundColor: "#000000", padding: 10 }}>
-      <ScrollView>
+    <ScrollView>
+      <View style={{ flex: 1, backgroundColor: "#000000", padding: 10 }}>
         <StatusBar
           barStyle="light-content"
           // backgroundColor="#111111"
           translucent={true}
         />
+        <View
+          style={{
+            width: 100,
+            height: 100,
+            borderRadius: 100,
+            backgroundColor: "whitesmoke",
+            alignSelf: "center",
+            justifyContent: "center",
+            alignItems: "center",
+            marginTop: 20,
+            marginBottom: 25,
+          }}
+        >
+          <Feather name="image" color="#686868" size={30} />
+        </View>
         <Label>Personal Details</Label>
         <View style={[style.inputBoxContainer, { flexDirection: "row" }]}>
           <InputForm placeholder="First Names" width={"48%"} />
           <InputForm placeholder="Surname" width={"48%"} />
+        </View>
+        <View style={style.inputBoxContainer}>
+          <InputForm placeholder="Username" />
         </View>
         <Label>Contact Details</Label>
         <View style={style.inputBoxContainer}>
@@ -46,6 +81,18 @@ export default function Hirefom() {
           <InputForm placeholder="City" />
           <InputForm placeholder="Code" width={80} />
         </View>
+        <Label>Account Details</Label>
+        <View style={style.inputBoxContainer}>
+          <InputForm placeholder="Card Holder" />
+          <InputForm placeholder="Bank Name" />
+          <InputForm placeholder="Card Number" />
+        </View>
+        <Label>Change Password Details</Label>
+        <View style={style.inputBoxContainer}>
+          <InputForm placeholder="Old Password" />
+          <InputForm placeholder="New Password" />
+          <InputForm placeholder="Confirm Password" />
+        </View>
 
         <TouchableOpacity
           style={{
@@ -58,12 +105,11 @@ export default function Hirefom() {
           }}
         >
           <Text style={{ color: "whitesmoke", fontWeight: "500" }}>
-            Proceed
+            Save Changes
           </Text>
         </TouchableOpacity>
-        {/* </View> */}
-      </ScrollView>
-    </View>
+      </View>
+    </ScrollView>
   );
 }
 
