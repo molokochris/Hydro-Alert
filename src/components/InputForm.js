@@ -47,6 +47,6 @@ const style = StyleSheet.create({
   },
   text: {
     color: "whitesmoke",
-    // fontFamily: "Poppins-Regular",
+    fontFamily: "Poppins-Regular",
   },
 });
