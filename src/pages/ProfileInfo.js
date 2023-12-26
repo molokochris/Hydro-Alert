@@ -43,8 +43,6 @@ export default function ProfileInfo({ navigation, route }) {
         emailAddress,
       };
 
-      // Get the current user ID (assuming it's stored in state)
-      // const userId = getUserId(); // Implement this function to get the user ID
       const userID = route.params.userID;
 
       // Set loading state to true
@@ -54,12 +52,17 @@ export default function ProfileInfo({ navigation, route }) {
       await firestore.collection("users").doc(userID).set(userProfileData);
 
       Alert.alert("Profile information saved successfully");
-      navigation.navigate("Location", { userID: userID });
+      // navigation.navigate("Location", { userID: userID });
     } catch (error) {
       console.error("Profile information error: ", error);
       Alert.alert("Failed to save profile information. Please try again.");
     } finally {
-      // Set loading state to false in the finally block to ensure it's executed regardless of success or error
+      setFirstNames("");
+      setSurname("");
+      setUsername("");
+      setContactNumbers("");
+      setEmailAddress("");
+
       setIsLoading(false);
     }
   };
@@ -80,7 +83,7 @@ export default function ProfileInfo({ navigation, route }) {
             alignSelf: "center",
             justifyContent: "center",
             alignItems: "center",
-            marginTop: 20,
+            marginTop: 30,
             marginBottom: 25,
           }}
         >
@@ -115,10 +118,10 @@ export default function ProfileInfo({ navigation, route }) {
             onChangeText={(text) => setContactNumbers(text)}
             value={contactNumbers}
           />
-          {/* <InputForm
+          <InputForm
             placeholder="Email Address"
             onChangeText={(text) => setEmailAddress(text)}
-          /> */}
+          />
         </View>
 
         <TouchableOpacity
@@ -128,7 +131,7 @@ export default function ProfileInfo({ navigation, route }) {
             paddingHorizontal: 10,
             borderRadius: 8,
             alignSelf: "center",
-            backgroundColor: "#59ADFF",
+            backgroundColor: "#018553",
             justifyContent: "center",
             alignItems: "center",
           }}

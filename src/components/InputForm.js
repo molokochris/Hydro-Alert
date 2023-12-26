@@ -16,6 +16,14 @@ export default function InputForm(props) {
         placeholderTextColor="#686868"
         cursorColor="whitesmoke"
         style={style.text}
+        onChangeText={props.onChangeText}
+        keyboardType={
+          props.placeholder === "Email Address"
+            ? "email-address"
+            : props.placeholder === "Contact Numbers"
+            ? "phone-pad"
+            : "default"
+        }
       />
     </View>
   );
