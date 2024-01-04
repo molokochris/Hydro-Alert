@@ -123,9 +123,21 @@ export default function Cart() {
           // padding: 10,
           // backgroundColor: "red",
           width: "100%",
-          alignItems: "flex-end",
+          // alignItems: "flex-end",
+          flexDirection: "row",
         }}
       >
+        <View style={{ flex: 1, justifyContent: "center", paddingStart: 10 }}>
+          <Text
+            style={{
+              fontFamily: "Poppins-Medium",
+              color: "#A9A4B6",
+              fontSize: calculateFontSize(16),
+            }}
+          >
+            Total:
+          </Text>
+        </View>
         <Pressable
           style={{
             backgroundColor: "#C3AE2E",
