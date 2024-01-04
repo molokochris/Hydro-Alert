@@ -10,13 +10,16 @@ import {
   ScrollView,
   Alert,
   ActivityIndicator,
-  ActivityIndicatorBase,
 } from "react-native";
 import React, { useCallback, useState } from "react";
 import * as SplashScreen from "expo-splash-screen";
 import { useFonts } from "expo-font";
 import { Ionicons } from "@expo/vector-icons";
 import { Auth } from "../firebase/firebase";
+import { saveData } from "../DB/SecureStorage";
+import { useContext } from "react";
+import { AuthContext } from "../context/AuthContext";
+// import * as DevClient from "expo-dev-client";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -26,6 +29,8 @@ export default function Login({ navigation }) {
   const [password, setPassword] = useState("");
 
   const [userID, setUserID] = useState(null);
+
+  const { login } = useContext(AuthContext);
 
   const [isLoaded] = useFonts({
     "Poppins-Black": require("../../assets/fonts/Poppins-Black.ttf"),
@@ -44,30 +49,31 @@ export default function Login({ navigation }) {
   // Handle Login Fuction
 
   const handleLogin = async () => {
-    if (!email || !password) {
-      Alert.alert("Please fill in all fields.");
-    } else {
-      setIsLoading(true);
-      try {
-        // Replace the following line with your login logic
-        const userCredentials = await Auth.signInWithEmailAndPassword(
-          email,
-          password
-        );
-
-        const userid = userCredentials.user.uid;
-        // setUserID(userid);
-        console.log(userid);
-        navigation.navigate("Location", { userID: userID });
-        Alert.alert("Login successful");
-      } catch (error) {
-        console.error("Login error: ", error);
-        const errorMessage = getFirebaseErrorMessage(error);
-        Alert.alert(errorMessage);
-      } finally {
-        setIsLoading(false);
-      }
-    }
+    // if (!email || !password) {
+    //   Alert.alert("Please fill in all fields.");
+    // } else {
+    //   setIsLoading(true);
+    //   try {
+    //     // Replace the following line with your login logic
+    //     const userCredentials = await Auth.signInWithEmailAndPassword(
+    //       email,
+    //       password
+    //     );
+    //     const userid = userCredentials.user.uid;
+    //     // saveData("userID", userid);
+    //     // setUserID(userid);
+    //     console.log(userid);
+    //     // navigation.navigate("Location", { userID: userID });
+    //     Alert.alert("Login successful");
+    //   } catch (error) {
+    //     console.error("Login error: ", error);
+    //     const errorMessage = getFirebaseErrorMessage(error);
+    //     Alert.alert(errorMessage);
+    //   } finally {
+    //     setIsLoading(false);
+    //   }
+    // }
+    login();
   };
 
   // Function to get user-friendly error message based on the Firebase error code

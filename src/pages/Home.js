@@ -10,7 +10,7 @@ import {
   Dimensions,
   PixelRatio,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { createMaterialBottomTabs } from "@react-navigation/material-bottom-tabs";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import {
@@ -28,6 +28,8 @@ import { Auth, firestore } from "../firebase/firebase";
 import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
 import { Alert } from "react-native";
 import { ScrollView } from "react-native";
+import { getData } from "../DB/SecureStorage";
+import { AuthContext } from "../context/AuthContext";
 
 export default function Home({ navigation, route }) {
   const [sidemenu, setSideMenu] = useState(false);
@@ -38,6 +40,8 @@ export default function Home({ navigation, route }) {
   const { width } = Dimensions.get("window");
   const fontScale = 0.85;
 
+  const { logout } = useContext(AuthContext);
+
   const calculateFontSize = (baseFont) => {
     const adjustFontSize = PixelRatio.roundToNearestPixel(
       (baseFont * width * fontScale) / 360
@@ -47,25 +51,26 @@ export default function Home({ navigation, route }) {
   };
 
   const location = route.params.location;
-  const userID = route.params.userID;
+
+  // get current userID
+  const auth = getAuth();
+  const currentUser = auth.currentUser;
 
   // Fetch Data from Database
   useEffect(() => {
     setIsUpdates(false);
 
     const fetchUpdates = async () => {
-      console.log(userID);
       try {
         const updatesRef = firestore.collection(`${location}`);
         const snapshot = await updatesRef.get();
+        const userId = await getData("userID");
 
+        console.log(userId);
         const userProfDoc = await firestore
           .collection("users")
-          // .doc(`${userID}`)
-          .doc("ZoJTd7sHYfPzUnVPI1DcxAJSBIn2")
+          .doc(userId)
           .get();
-
-        const userProfData = userProfDoc.exists ? userProfDoc.data() : {}; // Provide an empty object if the document doesn't exist
 
         const updatesData = snapshot.docs.map((doc) => ({
           id: doc.id,
@@ -74,7 +79,8 @@ export default function Home({ navigation, route }) {
         setUpdates(updatesData);
 
         console.log("Updates Data: ", updatesData);
-        console.log("User Profile: ", userProfData);
+        console.log("UserID Data: ", userId);
+        console.log("User Profile: ", userProfDoc.data());
 
         setIsUpdates(true);
       } catch (error) {
@@ -83,7 +89,7 @@ export default function Home({ navigation, route }) {
     };
 
     fetchUpdates();
-  }, [location, userID]);
+  }, [location]);
   // console.log(route.params.location);
   return isUpdates ? (
     <LinearGradient
@@ -292,7 +298,18 @@ export default function Home({ navigation, route }) {
                 }}
               ></View>
               <View>
-                <Text style={{ color: "#BDBDBD" }}>molokochrisp742@gmail</Text>
+                <TouchableOpacity
+                  style={{
+                    backgroundColor: "tomato",
+                    padding: 5,
+                    borderRadius: 4,
+                  }}
+                  onPress={() => logout()}
+                >
+                  <Text style={{ color: "#BDBDBD", fontWeight: "bold" }}>
+                    Logout
+                  </Text>
+                </TouchableOpacity>
               </View>
             </View>
             <View style={{ flex: 3, paddingTop: 20 }}>

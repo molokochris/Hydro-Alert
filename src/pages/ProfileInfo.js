@@ -52,7 +52,7 @@ export default function ProfileInfo({ navigation, route }) {
       await firestore.collection("users").doc(userID).set(userProfileData);
 
       Alert.alert("Profile information saved successfully");
-      // navigation.navigate("Location", { userID: userID });
+      navigation.navigate("Login");
     } catch (error) {
       console.error("Profile information error: ", error);
       Alert.alert("Failed to save profile information. Please try again.");

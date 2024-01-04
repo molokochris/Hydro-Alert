@@ -13,101 +13,56 @@ import HireForm from "./src/pages/HireForm";
 import Settings from "./src/pages/Settings";
 import Orders from "./src/pages/Orders";
 import Location from "./src/pages/Location";
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import ProfileInfo from "./src/pages/ProfileInfo";
+import * as SecureStore from "expo-secure-store";
 
-const BottomBarContext = createContext({
-  state: true,
-  setState: () => {},
-});
+import { saveData, getData, deleteData } from "./src/DB/SecureStorage";
+import { AuthProvider } from "./src/context/AuthContext";
+import AppNav from "./src/navigation/AppNav";
 
 export default function App() {
   const Stack = createNativeStackNavigator();
-  const [bottomBar, SetBottomBar] = useState(true);
+  const [isAuth, setIsAuth] = useState(false);
 
-  const SetBottomBarVal = (value) => SetBottomBar(value);
-  const BottomBarContextVal = {
-    bottomBar,
-    SetBottomBarVal,
-  };
+  // useEffect(() => {
+  //   const saveAndRetrieveData = async () => {
+  //     try {
+  //       const savedData = await getData("userID");
+  //       if (savedData) {
+  //         setIsAuth(true);
+  //       } else {
+  //         setIsAuth(false);
+  //       }
+  //       // await deleteData("userID");
+  //       console.log(savedData); // Should log "Mounted"
+
+  //       // Utilize savedData in your component as needed
+  //     } catch (error) {
+  //       // Handle any errors that occur during saving or retrieval
+  //       console.error("Error saving or retrieving data:", error);
+  //     }
+  //   };
+
+  //   saveAndRetrieveData();
+  // }, []);
+
+  useEffect(() => {
+    const saveAndRetrieveData = async () => {
+      try {
+        const savedData = await getData("userID");
+        setIsAuth(!!savedData); // Update isAuth directly based on saved data
+      } catch (error) {
+        console.error("Error saving or retrieving data:", error);
+      }
+    };
+
+    saveAndRetrieveData();
+  }, []); // Empty dependency array to run only once on mount
 
   return (
-    <NavigationContainer>
-      <BottomBarContext.Provider value={BottomBarContextVal}>
-        <Stack.Navigator
-          initialRouteName="Welcome"
-          screenOptions={{ headerShown: false }}
-        >
-          <Stack.Screen name="Welcome" component={Onboarding} />
-          <Stack.Screen
-            name="Login"
-            component={Login}
-            // options={{
-            //   headerShown: true,
-            //   headerStyle: {
-            //     backgroundColor: "#000000",
-            //   },
-            //   headerTitleStyle: {
-            //     color: "whitesmoke",
-            //   },
-            //   title: "",
-            //   headerTitleAlign: "center",
-            // }}
-          />
-          <Stack.Screen name="Register" component={Register} />
-          <Stack.Screen name="UserInfo" component={ProfileInfo} />
-          <Stack.Screen name="Location" component={Location} />
-          <Stack.Screen
-            name="Main"
-            component={Main}
-            // options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="Store"
-            component={Store}
-            options={{
-              headerShown: true,
-              headerStyle: {
-                backgroundColor: "#111111",
-              },
-              headerTitleStyle: {
-                color: "whitesmoke",
-              },
-              headerTitleAlign: "center",
-            }}
-          />
-          <Stack.Screen
-            name="User Profile"
-            component={Profile}
-            options={{
-              headerShown: true,
-              headerStyle: {
-                backgroundColor: "#111111",
-              },
-              headerTitleStyle: {
-                color: "whitesmoke",
-              },
-              headerTitleAlign: "center",
-            }}
-          />
-          <Stack.Screen
-            name="Hire"
-            component={HireForm}
-            options={{
-              headerShown: true,
-              headerStyle: {
-                backgroundColor: "#111111",
-              },
-              headerTitleStyle: {
-                color: "whitesmoke",
-              },
-              headerTitleAlign: "center",
-            }}
-          />
-          <Stack.Screen name="Settings" component={Settings} />
-          <Stack.Screen name="Orders" component={Orders} />
-        </Stack.Navigator>
-      </BottomBarContext.Provider>
-    </NavigationContainer>
+    <AuthProvider>
+      <AppNav />
+    </AuthProvider>
   );
 }
