@@ -74,11 +74,12 @@ export default function AppStack() {
         options={{
           headerShown: true,
           headerStyle: {
-            backgroundColor: "#111111",
+            backgroundColor: "whitesmoke",
           },
           headerTitleStyle: {
-            color: "whitesmoke",
+            color: "#000000",
           },
+          headerTitle: "",
           headerTitleAlign: "center",
         }}
       />

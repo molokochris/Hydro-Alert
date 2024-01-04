@@ -108,7 +108,7 @@ export default function Store({ navigation }) {
         style={{
           padding: 10,
           backgroundColor: "black",
-          // justifyContent: "center",
+          justifyContent: "center",
           alignItems: "center",
           flexDirection: "row",
         }}
@@ -120,9 +120,8 @@ export default function Store({ navigation }) {
         </View>
         <TouchableOpacity
           style={{
-            backgroundColor: "tomato",
-            paddingHorizontal: 4,
-            paddingVertical: 2,
+            backgroundColor: "#C3AE2E",
+            padding: 10,
             borderRadius: 4,
             flex: 1,
             alignItems: "center",
