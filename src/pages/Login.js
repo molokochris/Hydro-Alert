@@ -9,6 +9,8 @@ import {
   ScrollView,
   Alert,
   ActivityIndicator,
+  PixelRatio,
+  Dimensions,
 } from "react-native";
 import React, { useCallback, useState } from "react";
 import * as SplashScreen from "expo-splash-screen";
@@ -20,6 +22,7 @@ import "firebase/compat/auth";
 import { saveData } from "../DB/SecureStorage";
 import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
+import calculateFontSize from "../components/AdjustFont";
 // import * as DevClient from "expo-dev-client";
 
 SplashScreen.preventAutoHideAsync();
@@ -57,6 +60,17 @@ export default function Login({ navigation }) {
       login(email, password);
     }
   };
+
+  // // adjust font
+  // const { width } = Dimensions.get("window");
+  // const fontScale = 0.85;
+  // const calculateFontSize = (baseFont) => {
+  //   const adjustFontSize = PixelRatio.roundToNearestPixel(
+  //     (baseFont * width * fontScale) / 360
+  //   );
+
+  //   return adjustFontSize;
+  // };
   return (
     <View
       style={{
@@ -85,7 +99,7 @@ export default function Login({ navigation }) {
               flexDirection: "column",
               // paddingBottom: 20,
               backgroundColor: "rgba(0,0,0,0.65)",
-              padding: 10,
+              padding: 20,
               justifyContent: "center",
               alignItems: "center",
             }}
@@ -94,7 +108,7 @@ export default function Login({ navigation }) {
               style={{
                 fontFamily: "Poppins-Black",
                 color: "whitesmoke",
-                fontSize: 50,
+                fontSize: calculateFontSize(50),
                 textAlign: "center",
                 // textShadowOffset: 5,
                 textShadowColor: "red",
@@ -102,25 +116,6 @@ export default function Login({ navigation }) {
             >
               Welcome Back.
             </Text>
-            {/* <View
-            style={{ flex: 1, justifyContent: "flex-end", marginBottom: 10 }}
-          > */}
-            {/* <TouchableOpacity
-              style={{
-                paddingHorizontal: 4,
-                paddingVertical: 10,
-                borderColor: "whitesmoke",
-                borderWidth: 1,
-                borderRadius: 8,
-                flexDirection: "row",
-                justifyContent: "center",
-                alignItems: "flex-end",
-                backgroundColor: "whitesmoke",
-              }}
-            >
-              <Ionicons name="md-logo-google" size={24} color="#000000" />
-            </TouchableOpacity> */}
-            {/* </View> */}
           </View>
         </ImageBackground>
 
@@ -148,15 +143,19 @@ export default function Login({ navigation }) {
               backgroundColor: "whitesmoke",
             }}
           >
-            <Ionicons name="md-logo-google" size={24} color="#000000" />
+            <Ionicons
+              name="md-logo-google"
+              size={calculateFontSize(24)}
+              color="#000000"
+            />
           </TouchableOpacity>
           <Text
             style={{
               marginVertical: 20,
-              color: "#222222",
+              color: "#444444",
               fontFamily: "Poppins-Medium",
               alignSelf: "center",
-              fontSize: 20,
+              fontSize: calculateFontSize(20),
             }}
           >
             OR
@@ -168,16 +167,16 @@ export default function Login({ navigation }) {
               paddingVertical: 10,
               marginBottom: 10,
               borderBottomWidth: 1,
-              borderBottomColor: "#222222",
+              borderBottomColor: "#444444",
               borderRadius: 8,
             }}
           >
             <TextInput
-              placeholder="Username/Email Address"
-              placeholderTextColor="#222222"
-              cursorColor="#222222"
+              placeholder="Email Address"
+              placeholderTextColor="#444444"
+              cursorColor="#444444"
               style={{ color: "whitesmoke" }}
-              textContentType="emailAddress"
+              keyboardType="email-address"
               onChangeText={(text) => setEmail(text)}
             />
           </View>
@@ -187,17 +186,17 @@ export default function Login({ navigation }) {
               paddingHorizontal: 4,
               paddingVertical: 10,
               borderBottomWidth: 1,
-              borderBottomColor: "#222222",
+              borderBottomColor: "#444444",
               marginBottom: 10,
               borderRadius: 8,
             }}
           >
             <TextInput
               placeholder="Password"
-              placeholderTextColor="#222222"
-              cursorColor="#222222"
+              placeholderTextColor="#444444"
+              cursorColor="#444444"
               style={{ color: "whitesmoke" }}
-              textContentType="password"
+              secureTextEntry
               onChangeText={(text) => setPassword(text)}
             />
           </View>
@@ -222,7 +221,7 @@ export default function Login({ navigation }) {
                 style={{
                   fontFamily: "Poppins-Medium",
                   color: "whitesmoke",
-                  fontSize: 16,
+                  fontSize: calculateFontSize(16),
                 }}
               >
                 Login

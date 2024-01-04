@@ -16,6 +16,7 @@ import { useFonts } from "expo-font";
 import { Ionicons } from "@expo/vector-icons";
 import { Auth } from "../firebase/firebase";
 import { Alert } from "react-native";
+import calculateFontSize from "../components/AdjustFont";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -115,7 +116,7 @@ export default function Register({ navigation }) {
               flexDirection: "column",
               // paddingBottom: 20,
               backgroundColor: "rgba(0,0,0,0.65)",
-              padding: 10,
+              padding: 20,
               justifyContent: "center",
               alignItems: "center",
             }}
@@ -124,33 +125,14 @@ export default function Register({ navigation }) {
               style={{
                 fontFamily: "Poppins-Black",
                 color: "whitesmoke",
-                fontSize: 35,
+                fontSize: calculateFontSize(40),
                 textAlign: "center",
                 // textShadowOffset: 5,
                 textShadowColor: "red",
               }}
             >
-              Welcome to Hydro Alert.
+              Welcome to <Text style={{ color: "#C3AE2E" }}>Hydro Alert.</Text>
             </Text>
-            {/* <View
-            style={{ flex: 1, justifyContent: "flex-end", marginBottom: 10 }}
-          > */}
-            {/* <TouchableOpacity
-              style={{
-                paddingHorizontal: 4,
-                paddingVertical: 10,
-                borderColor: "whitesmoke",
-                borderWidth: 1,
-                borderRadius: 8,
-                flexDirection: "row",
-                justifyContent: "center",
-                alignItems: "flex-end",
-                backgroundColor: "whitesmoke",
-              }}
-            >
-              <Ionicons name="md-logo-google" size={24} color="#000000" />
-            </TouchableOpacity> */}
-            {/* </View> */}
           </View>
         </ImageBackground>
 
@@ -178,15 +160,19 @@ export default function Register({ navigation }) {
               backgroundColor: "whitesmoke",
             }}
           >
-            <Ionicons name="md-logo-google" size={24} color="#000000" />
+            <Ionicons
+              name="md-logo-google"
+              size={calculateFontSize(24)}
+              color="#000000"
+            />
           </TouchableOpacity>
           <Text
             style={{
               marginVertical: 20,
-              color: "#222222",
+              color: "#444444",
               fontFamily: "Poppins-Medium",
               alignSelf: "center",
-              fontSize: 20,
+              fontSize: calculateFontSize(20),
             }}
           >
             OR
@@ -198,17 +184,17 @@ export default function Register({ navigation }) {
               paddingVertical: 10,
               marginBottom: 10,
               borderBottomWidth: 1,
-              borderBottomColor: "#222222",
+              borderBottomColor: "#444444",
               borderRadius: 8,
             }}
           >
             <TextInput
               placeholder="Email Address"
-              placeholderTextColor="#222222"
-              cursorColor="#222222"
+              placeholderTextColor="#444444"
+              cursorColor="#444444"
               style={{ color: "whitesmoke" }}
-              keyboardType="email-address" // Assuming this is an email input
-              onChangeText={(text) => setEmail(text)} // Assuming you have a state variable for email
+              keyboardType="email-address"
+              onChangeText={(text) => setEmail(text)}
             />
           </View>
           <View
@@ -217,18 +203,18 @@ export default function Register({ navigation }) {
               paddingHorizontal: 4,
               paddingVertical: 10,
               borderBottomWidth: 1,
-              borderBottomColor: "#222222",
+              borderBottomColor: "#444444",
               marginBottom: 10,
               borderRadius: 8,
             }}
           >
             <TextInput
               placeholder="Password"
-              placeholderTextColor="#222222"
-              cursorColor="#222222"
+              placeholderTextColor="#444444"
+              cursorColor="#444444"
               style={{ color: "whitesmoke" }}
-              secureTextEntry // Assuming this is a password input
-              onChangeText={(text) => setPassword(text)} // Assuming you have a state variable for password
+              secureTextEntry
+              onChangeText={(text) => setPassword(text)}
             />
           </View>
           <View
@@ -237,15 +223,15 @@ export default function Register({ navigation }) {
               paddingHorizontal: 4,
               paddingVertical: 10,
               borderBottomWidth: 1,
-              borderBottomColor: "#222222",
+              borderBottomColor: "#444444",
               marginBottom: 10,
               borderRadius: 8,
             }}
           >
             <TextInput
               placeholder="Confirm password"
-              placeholderTextColor="#222222"
-              cursorColor="#222222"
+              placeholderTextColor="#444444"
+              cursorColor="#444444"
               style={{ color: "whitesmoke" }}
               secureTextEntry // Assuming this is a password input
               onChangeText={(text) => setConfirmPassword(text)} // Assuming you have a state variable for confirm password
@@ -266,13 +252,16 @@ export default function Register({ navigation }) {
             disabled={isLoading} // Disable button when loading
           >
             {isLoading ? (
-              <ActivityIndicator size={30} color="whitesmoke" />
+              <ActivityIndicator
+                size={calculateFontSize(30)}
+                color="whitesmoke"
+              />
             ) : (
               <Text
                 style={{
                   fontFamily: "Poppins-Medium",
                   color: "whitesmoke",
-                  fontSize: 16,
+                  fontSize: calculateFontSize(16),
                 }}
               >
                 Register

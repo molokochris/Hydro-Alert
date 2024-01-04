@@ -1,4 +1,4 @@
-import { View, Text } from "react-native";
+import { View, Text, ImageBackground } from "react-native";
 import React from "react";
 import AuthStack from "./AuthStack";
 import { NavigationContainer } from "@react-navigation/native";
@@ -14,16 +14,22 @@ export default function AppNav() {
 
   if (isLoading) {
     return (
-      <View
-        style={{
-          flex: 1,
-          justifyContent: "center",
-          alignItems: "center",
-          backgroundColor: "#000000",
-        }}
+      <ImageBackground
+        style={{ flex: 1 }}
+        resizeMode="cover"
+        source={require("../../assets/Images/loading.jpg")}
       >
-        <ActivityIndicator size={"large"} color="#C3AE2E" />
-      </View>
+        <View
+          style={{
+            flex: 1,
+            justifyContent: "center",
+            alignItems: "center",
+            backgroundColor: "rgba(1,1,1,0.86)",
+          }}
+        >
+          <ActivityIndicator size={"large"} color="#C3AE2E" />
+        </View>
+      </ImageBackground>
     );
   }
   return (

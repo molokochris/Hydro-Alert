@@ -31,25 +31,13 @@ import { Alert } from "react-native";
 import { ScrollView } from "react-native";
 import { getData } from "../DB/SecureStorage";
 import { AuthContext } from "../context/AuthContext";
+import calculateFontSize from "../components/AdjustFont";
 
 export default function Home({ navigation, route }) {
   const [sidemenu, setSideMenu] = useState(false);
   const [isUpdates, setIsUpdates] = useState(false);
   const [updates, setUpdates] = useState();
   const [modalVisible, setModalVisible] = useState(false);
-
-  const { width } = Dimensions.get("window");
-  const fontScale = 0.85;
-
-  const { logout } = useContext(AuthContext);
-
-  const calculateFontSize = (baseFont) => {
-    const adjustFontSize = PixelRatio.roundToNearestPixel(
-      (baseFont * width * fontScale) / 360
-    );
-
-    return adjustFontSize;
-  };
 
   const location = route.params.location;
   const user = firebase.auth().currentUser;
