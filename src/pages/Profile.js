@@ -9,24 +9,25 @@ import {
 } from "react-native";
 import React, { Children } from "react";
 import { Feather } from "@expo/vector-icons";
+import InputForm from "../components/InputForm";
 
-function InputForm(props) {
-  return (
-    <View
-      style={[
-        style.inputFieldContainer,
-        { width: props.width, marginBottom: 5 },
-        props.style,
-      ]}
-    >
-      <TextInput
-        placeholder={props.placeholder}
-        placeholderTextColor="#686868"
-        cursorColor="whitesmoke"
-      />
-    </View>
-  );
-}
+// function InputForm(props) {
+//   return (
+//     <View
+//       style={[
+//         style.inputFieldContainer,
+//         { width: props.width, marginBottom: 5 },
+//         props.style,
+//       ]}
+//     >
+//       <TextInput
+//         placeholder={props.placeholder}
+//         placeholderTextColor="#686868"
+//         cursorColor="whitesmoke"
+//       />
+//     </View>
+//   );
+// }
 
 function Label(props) {
   return (

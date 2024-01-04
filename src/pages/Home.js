@@ -25,6 +25,7 @@ import HireForm from "./HireForm";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { LinearGradient } from "expo-linear-gradient";
 import { Auth, firestore } from "../firebase/firebase";
+import firebase from "firebase/compat/app";
 import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
 import { Alert } from "react-native";
 import { ScrollView } from "react-native";
@@ -51,10 +52,7 @@ export default function Home({ navigation, route }) {
   };
 
   const location = route.params.location;
-
-  // get current userID
-  const auth = getAuth();
-  const currentUser = auth.currentUser;
+  const user = firebase.auth().currentUser;
 
   // Fetch Data from Database
   useEffect(() => {
@@ -69,7 +67,7 @@ export default function Home({ navigation, route }) {
         console.log(userId);
         const userProfDoc = await firestore
           .collection("users")
-          .doc(userId)
+          .doc(user.uid)
           .get();
 
         const updatesData = snapshot.docs.map((doc) => ({

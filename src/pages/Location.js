@@ -17,36 +17,6 @@ export default function Location({ navigation, route }) {
   const [search, setSearch] = useState(false);
   const [searchRes, setSearchRes] = useState("");
 
-  const auth = getAuth();
-  const currentUser = auth.currentUser;
-
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const userId = await getData("userID");
-
-        // Check for null UID and invoke deleteData
-        // if (!currentUser || !currentUser.uid) {
-        //   await deleteData("userID"); // Delete data if UID is null or no user is authenticated
-        //   return; // Exit the function to avoid further processing
-        // }
-
-        // If UID is not null and matches the stored userId, proceed
-        // if (currentUser.uid === userId) {
-        console.log(userId);
-        // } else {
-        //   // Handle the case where userId doesn't match currentUser.uid
-        //   // You might want to delete data here as well, depending on your logic
-        //   // await deleteData("userID"); // Example: Deleting data if a mismatch occurs
-        // }
-      } catch (error) {
-        console.log("Problem with user data:", error);
-      }
-    }
-
-    fetchData();
-  }, []);
-
   const locations = ["Boyne", "Makanye", "Ga-Molepo", "Iraq", "Ga-Mothiba"];
   const searchLocation = (e) => {
     // setSearch(true);

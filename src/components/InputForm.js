@@ -16,6 +16,8 @@ export default function InputForm(props) {
         placeholderTextColor="#686868"
         cursorColor="whitesmoke"
         style={style.text}
+        value={props.value}
+        editable={props.editable}
         onChangeText={props.onChangeText}
         keyboardType={
           props.placeholder === "Email Address"

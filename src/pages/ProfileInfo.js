@@ -12,6 +12,7 @@ import {
 import React, { Children, useState } from "react";
 import { Feather } from "@expo/vector-icons";
 import { firestore } from "../firebase/firebase";
+import firebase from "firebase/compat/app";
 import InputForm from "../components/InputForm";
 
 function Label(props) {
@@ -27,7 +28,9 @@ export default function ProfileInfo({ navigation, route }) {
   const [surname, setSurname] = useState("");
   const [username, setUsername] = useState("");
   const [contactNumbers, setContactNumbers] = useState("");
-  const [emailAddress, setEmailAddress] = useState("");
+  const [emailAddress, setEmailAddress] = useState(
+    firebase.auth().currentUser.email
+  );
   const [isLoading, setIsLoading] = useState(false);
 
   //   handle user info
@@ -42,14 +45,23 @@ export default function ProfileInfo({ navigation, route }) {
         contactNumbers,
         emailAddress,
       };
-
-      const userID = route.params.userID;
+      const user = firebase.auth().currentUser;
+      if (user) {
+        await user.updateProfile({
+          displayName: username,
+          firstNames: firstNames,
+          surname: surname,
+          phoneNumber: contactNumbers,
+        });
+        // const latestData = firebase.auth().currentUser;
+        // saveData("userInfo", JSON.stringify(latestData));
+      }
 
       // Set loading state to true
       setIsLoading(true);
 
       // Save the user profile data to the "users" collection with the user ID as the document name
-      await firestore.collection("users").doc(userID).set(userProfileData);
+      await firestore.collection("users").doc(user.uid).set(userProfileData);
 
       Alert.alert("Profile information saved successfully");
       navigation.navigate("Login");
@@ -121,6 +133,8 @@ export default function ProfileInfo({ navigation, route }) {
           <InputForm
             placeholder="Email Address"
             onChangeText={(text) => setEmailAddress(text)}
+            value={emailAddress}
+            editable={false}
           />
         </View>
 
