@@ -52,24 +52,24 @@ export default function Home({ navigation, route }) {
       try {
         const updatesRef = firestore.collection(`${location}`);
         const snapshot = await updatesRef.get();
-        const userId = await getData("userID");
+        // const userId = await getData("userID");
 
-        console.log(userId);
-        const userProfDoc = await firestore
-          .collection("users")
-          .doc(user.uid)
-          .get();
+        // console.log(userId);
+        // const userProfDoc = await firestore
+        //   .collection("users")
+        //   .doc(user.uid)
+        //   .get();
 
         const updatesData = snapshot.docs.map((doc) => ({
           id: doc.id,
           ...doc.data(),
         }));
         setUpdates(updatesData);
-        saveData("userProfile", JSON.stringify(userProfDoc.data()));
+        // saveData("userProfile", JSON.stringify(userProfDoc.data()));
 
         console.log("Updates Data: ", updatesData);
-        console.log("UserID Data: ", userId);
-        console.log("User Profile: ", userProfDoc.data());
+        // console.log("UserID Data: ", userId);
+        // console.log("User Profile: ", userProfDoc.data());
 
         setIsUpdates(true);
       } catch (error) {
@@ -78,7 +78,7 @@ export default function Home({ navigation, route }) {
     };
 
     fetchUpdates();
-  }, [location]);
+  }, [location, user]);
   // console.log(route.params.location);
   return isUpdates ? (
     <LinearGradient
