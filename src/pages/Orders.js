@@ -112,7 +112,7 @@ function LiveOrders({ navigation }) {
   return (
     <View style={style.container}>
       {userOrders.approved == false ? (
-        <ItemStatus />
+        <ItemStatus orderInfo={userOrders} />
       ) : userOrders.approved == true ? (
         <ItemStatus status={"success"} />
       ) : (
@@ -243,7 +243,7 @@ function ItemStatus(props) {
     >
       <View style={{ justifyContent: "center", alignItems: "center" }}>
         <Text style={{ color: "whitesmoke", fontFamily: "Poppins-Regular" }}>
-          Water Delivery
+          {props.storeOrder ? "Jojo Tank" : "Water Delivery"}
         </Text>
       </View>
       <View
