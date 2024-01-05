@@ -29,7 +29,7 @@ import firebase from "firebase/compat/app";
 import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
 import { Alert } from "react-native";
 import { ScrollView } from "react-native";
-import { getData } from "../DB/SecureStorage";
+import { getData, saveData } from "../DB/SecureStorage";
 import { AuthContext } from "../context/AuthContext";
 import calculateFontSize from "../components/AdjustFont";
 
@@ -38,6 +38,8 @@ export default function Home({ navigation, route }) {
   const [isUpdates, setIsUpdates] = useState(false);
   const [updates, setUpdates] = useState();
   const [modalVisible, setModalVisible] = useState(false);
+
+  const { logout } = useContext(AuthContext);
 
   const location = route.params.location;
   const user = firebase.auth().currentUser;
@@ -63,6 +65,7 @@ export default function Home({ navigation, route }) {
           ...doc.data(),
         }));
         setUpdates(updatesData);
+        saveData("userProfile", JSON.stringify(userProfDoc.data()));
 
         console.log("Updates Data: ", updatesData);
         console.log("UserID Data: ", userId);

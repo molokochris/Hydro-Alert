@@ -22,7 +22,8 @@ export default function InputForm(props) {
         keyboardType={
           props.placeholder === "Email Address"
             ? "email-address"
-            : props.placeholder === "Contact Numbers"
+            : props.placeholder === "Contact Numbers" ||
+              props.placeholder === "Code"
             ? "phone-pad"
             : "default"
         }

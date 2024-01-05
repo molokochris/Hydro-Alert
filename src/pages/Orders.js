@@ -1,10 +1,12 @@
 import { View, Text, StyleSheet, StatusBar, ScrollView } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { LinearGradient } from "expo-linear-gradient";
 import { BlurView } from "expo-blur";
 import { Ionicons } from "@expo/vector-icons";
 import { Pressable } from "react-native";
+import { firestore } from "../firebase/firebase";
+import firebase from "firebase/compat/app";
 
 export default function Orders({ navigation }) {
   const Tab = createMaterialTopTabNavigator();
@@ -86,11 +88,36 @@ export default function Orders({ navigation }) {
 }
 
 function LiveOrders({ navigation }) {
+  const [userOrders, setUserOrders] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const user = firebase.auth().currentUser;
+  useEffect(() => {
+    const fetchOrders = async () => {
+      try {
+        setIsLoading(true);
+        const userOrders = await firestore
+          .collection("pendingOrders")
+          .doc(user.uid)
+          .get();
+        setUserOrders(userOrders.data());
+        console.log(userOrders.data());
+      } catch (error) {
+        console.log(`something went wrong fetchiing data ${error}`);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchOrders();
+  }, []);
   return (
     <View style={style.container}>
-      <ItemStatus />
-      <ItemStatus status={"success"} />
-      <ItemStatus status={"fail"} />
+      {userOrders.approved == false ? (
+        <ItemStatus />
+      ) : userOrders.approved == true ? (
+        <ItemStatus status={"success"} />
+      ) : (
+        <ItemStatus status={"fail"} />
+      )}
     </View>
   );
 }

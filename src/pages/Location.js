@@ -1,5 +1,5 @@
-import { View, Text, StatusBar, ScrollView } from "react-native";
-import React, { useEffect, useState } from "react";
+import { View, Text, StatusBar, ScrollView, Button } from "react-native";
+import React, { useContext, useEffect, useState } from "react";
 import { Pressable } from "react-native";
 import { useCallback } from "react";
 import * as SplashScreen from "expo-splash-screen";
@@ -10,12 +10,14 @@ import { TextInput } from "react-native";
 import { deleteData, getData } from "../DB/SecureStorage";
 import { Auth } from "../firebase/firebase";
 import { getAuth } from "firebase/auth";
+import { AuthContext } from "../context/AuthContext";
 
 SplashScreen.preventAutoHideAsync();
 
 export default function Location({ navigation, route }) {
   const [search, setSearch] = useState(false);
   const [searchRes, setSearchRes] = useState("");
+  const { logout } = useContext(AuthContext);
 
   const locations = ["Boyne", "Makanye", "Ga-Molepo", "Iraq", "Ga-Mothiba"];
   const searchLocation = (e) => {
@@ -132,6 +134,7 @@ export default function Location({ navigation, route }) {
                     );
                   })}
           </ScrollView>
+          {/* <Button title="logout" onPress={() => logout()} /> */}
         </View>
       </View>
     </View>

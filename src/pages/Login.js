@@ -60,26 +60,15 @@ export default function Login({ navigation }) {
       login(email, password);
     }
   };
-
-  // // adjust font
-  // const { width } = Dimensions.get("window");
-  // const fontScale = 0.85;
-  // const calculateFontSize = (baseFont) => {
-  //   const adjustFontSize = PixelRatio.roundToNearestPixel(
-  //     (baseFont * width * fontScale) / 360
-  //   );
-
-  //   return adjustFontSize;
-  // };
   return (
-    <View
+    <ImageBackground
       style={{
         flex: 1,
-        backgroundColor: "#000000",
-        // padding: 10,
         justifyContent: "center",
         alignItems: "center",
       }}
+      resizeMode="repeat"
+      source={require("../../assets/Images/onboarding-2.jpg")}
       onLayout={handleOnLayout}
     >
       <StatusBar
@@ -87,177 +76,174 @@ export default function Login({ navigation }) {
         barStyle="light-content"
         backgroundColor="transparent"
       />
-      <ScrollView style={{ width: "100%" }}>
-        <ImageBackground
-          source={require("../../assets/Images/onboarding-2.jpg")}
-          style={{ flex: 1, width: "100%" }}
-        >
-          <View
-            style={{
-              flex: 1,
-              width: "100%",
-              flexDirection: "column",
-              // paddingBottom: 20,
-              backgroundColor: "rgba(0,0,0,0.65)",
-              padding: 20,
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <Text
-              style={{
-                fontFamily: "Poppins-Black",
-                color: "whitesmoke",
-                fontSize: calculateFontSize(50),
-                textAlign: "center",
-                // textShadowOffset: 5,
-                textShadowColor: "red",
-              }}
-            >
-              Welcome Back.
-            </Text>
-          </View>
-        </ImageBackground>
-
+      <View
+        style={{
+          flex: 1,
+          width: "100%",
+          flexDirection: "column",
+          backgroundColor: "rgba(0,0,0,0.65)",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
         <View
           style={{
             flex: 1,
-            width: "100%",
-            // borderWidth: 1,
-            borderColor: "whitesmoke",
-            borderRadius: 8,
-            padding: 10,
             justifyContent: "center",
+            alignItems: "center",
+            paddingHorizontal: 20,
           }}
         >
-          <TouchableOpacity
-            style={{
-              paddingHorizontal: 4,
-              paddingVertical: 10,
-              borderColor: "whitesmoke",
-              borderWidth: 1,
-              borderRadius: 8,
-              flexDirection: "row",
-              justifyContent: "center",
-              alignItems: "flex-end",
-              backgroundColor: "whitesmoke",
-            }}
-          >
-            <Ionicons
-              name="md-logo-google"
-              size={calculateFontSize(24)}
-              color="#000000"
-            />
-          </TouchableOpacity>
           <Text
             style={{
-              marginVertical: 20,
-              color: "#444444",
-              fontFamily: "Poppins-Medium",
-              alignSelf: "center",
-              fontSize: calculateFontSize(20),
+              fontFamily: "Poppins-Bold",
+              color: "whitesmoke",
+              fontSize: calculateFontSize(40),
+              textAlign: "center",
             }}
           >
-            OR
+            Welcome Back
           </Text>
-          <View
-            style={{
-              // backgroundColor: "#111111",
-              paddingHorizontal: 4,
-              paddingVertical: 10,
-              marginBottom: 10,
-              borderBottomWidth: 1,
-              borderBottomColor: "#444444",
-              borderRadius: 8,
-            }}
+        </View>
+        <View
+          style={{
+            flex: 3,
+            borderTopRightRadius: 18,
+            borderTopLeftRadius: 18,
+            padding: 10,
+            justifyContent: "center",
+            // alignItems: "center",
+            backgroundColor: "#000000",
+            width: "100%",
+          }}
+        >
+          <ScrollView
+          // contentContainerStyle={{ flex: 1, justifyContent: "center" }}
           >
-            <TextInput
-              placeholder="Email Address"
-              placeholderTextColor="#444444"
-              cursorColor="#444444"
-              style={{ color: "whitesmoke" }}
-              keyboardType="email-address"
-              onChangeText={(text) => setEmail(text)}
-            />
-          </View>
-          <View
-            style={{
-              // backgroundColor: "#111111",
-              paddingHorizontal: 4,
-              paddingVertical: 10,
-              borderBottomWidth: 1,
-              borderBottomColor: "#444444",
-              marginBottom: 10,
-              borderRadius: 8,
-            }}
-          >
-            <TextInput
-              placeholder="Password"
-              placeholderTextColor="#444444"
-              cursorColor="#444444"
-              style={{ color: "whitesmoke" }}
-              secureTextEntry
-              onChangeText={(text) => setPassword(text)}
-            />
-          </View>
-          <TouchableOpacity
-            style={{
-              backgroundColor: "#C3AE2E",
-              paddingHorizontal: 4,
-              paddingVertical: 10,
-              marginTop: 20,
-              marginBottom: 10,
-              borderRadius: 8,
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-            onPress={handleLogin}
-            disabled={isLoading} // Disable button when loading
-          >
-            {isLoading ? (
-              <ActivityIndicator size={30} color="whitesmoke" />
-            ) : (
-              <Text
-                style={{
-                  fontFamily: "Poppins-Medium",
-                  color: "whitesmoke",
-                  fontSize: calculateFontSize(16),
-                }}
-              >
-                Login
-              </Text>
-            )}
-          </TouchableOpacity>
-          <View style={{}}>
-            <Pressable>
-              <Text style={{ color: "tomato", fontFamily: "Poppins-Regular" }}>
-                Forgot your password?
-              </Text>
-            </Pressable>
-            <View
+            <TouchableOpacity
               style={{
-                justifyContent: "center",
-                marginTop: 30,
-                flexDirection: "row",
+                paddingHorizontal: 4,
+                paddingVertical: 10,
+                borderColor: "whitesmoke",
+                borderWidth: 1,
+                borderRadius: 8,
+                alignItems: "center",
+                backgroundColor: "whitesmoke",
               }}
             >
-              <Text
-                style={{ color: "whitesmoke", fontFamily: "Poppins-Regular" }}
-              >
-                Don't have an account,{" "}
-              </Text>
-              <Pressable onPress={() => navigation.navigate("Register")}>
-                <Text style={{ color: "#018553" }}> Register</Text>
-              </Pressable>
+              <Ionicons
+                name="md-logo-google"
+                size={calculateFontSize(24)}
+                color="#000000"
+              />
+            </TouchableOpacity>
+            <Text
+              style={{
+                marginVertical: 20,
+                color: "#444444",
+                fontFamily: "Poppins-Medium",
+                alignSelf: "center",
+                fontSize: calculateFontSize(20),
+              }}
+            >
+              OR
+            </Text>
+            <View
+              style={{
+                // backgroundColor: "#111111",
+                paddingHorizontal: 4,
+                paddingVertical: 10,
+                marginBottom: 10,
+                borderBottomWidth: 1,
+                borderBottomColor: "#444444",
+                borderRadius: 8,
+              }}
+            >
+              <TextInput
+                placeholder="Email Address"
+                placeholderTextColor="#444444"
+                cursorColor="#444444"
+                style={{ color: "whitesmoke" }}
+                keyboardType="email-address"
+                onChangeText={(text) => setEmail(text)}
+              />
             </View>
-          </View>
-          {/* <Button title="Home"  /> */}
-          {/* <Button
-          title="Register"
-          }
-        /> */}
+            <View
+              style={{
+                // backgroundColor: "#111111",
+                paddingHorizontal: 4,
+                paddingVertical: 10,
+                borderBottomWidth: 1,
+                borderBottomColor: "#444444",
+                marginBottom: 10,
+                borderRadius: 8,
+              }}
+            >
+              <TextInput
+                placeholder="Password"
+                placeholderTextColor="#444444"
+                cursorColor="#444444"
+                style={{ color: "whitesmoke" }}
+                secureTextEntry
+                onChangeText={(text) => setPassword(text)}
+              />
+            </View>
+            <TouchableOpacity
+              style={{
+                backgroundColor: "#C3AE2E",
+                paddingHorizontal: 4,
+                paddingVertical: 10,
+                marginTop: 20,
+                marginBottom: 10,
+                borderRadius: 8,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+              onPress={handleLogin}
+              disabled={isLoading} // Disable button when loading
+            >
+              {isLoading ? (
+                <ActivityIndicator size={30} color="whitesmoke" />
+              ) : (
+                <Text
+                  style={{
+                    fontFamily: "Poppins-Medium",
+                    color: "whitesmoke",
+                    fontSize: calculateFontSize(16),
+                  }}
+                >
+                  Login
+                </Text>
+              )}
+            </TouchableOpacity>
+            <View style={{}}>
+              <Pressable>
+                <Text
+                  style={{ color: "tomato", fontFamily: "Poppins-Regular" }}
+                >
+                  Forgot your password?
+                </Text>
+              </Pressable>
+              <View
+                style={{
+                  justifyContent: "center",
+                  marginTop: 30,
+                  flexDirection: "row",
+                }}
+              >
+                <Text
+                  style={{ color: "whitesmoke", fontFamily: "Poppins-Regular" }}
+                >
+                  Don't have an account,{" "}
+                </Text>
+                <Pressable onPress={() => navigation.navigate("Register")}>
+                  <Text style={{ color: "#018553" }}> Register</Text>
+                </Pressable>
+              </View>
+            </View>
+          </ScrollView>
         </View>
-      </ScrollView>
-    </View>
+      </View>
+    </ImageBackground>
   );
 }

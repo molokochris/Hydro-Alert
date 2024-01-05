@@ -109,8 +109,6 @@ export default function Onboarding({ navigation }) {
         >
           {/* <Button title="next" onPress={() => navigation.navigate("Location")} /> */}
           <Pressable
-            title="next"
-            // onPress={nextImage}
             style={{
               backgroundColor: "#018553",
               paddingVertical: 12,
