@@ -1,8 +1,9 @@
 import { View, Text, ScrollView, TouchableOpacity, Alert } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import { addItem, removeItem } from "../store/reducers";
 import { useDispatch, useSelector } from "react-redux";
 import { Ionicons } from "@expo/vector-icons";
+import { firestore } from "../firebase/firebase";
 
 export default function Store({ navigation }) {
   const CartItemsList = useSelector((state) => state);
@@ -23,6 +24,23 @@ export default function Store({ navigation }) {
     Alert.alert("added item to cart");
     // navigation.goBack();
   };
+
+  useEffect(() => {
+    firestore
+      .collection("tanks")
+      .get()
+      .then((querySnapshot) => {
+        // Access individual documents using querySnapshot.docs
+        querySnapshot.docs.forEach((doc) => {
+          const tankData = doc.data();
+          console.log(tankData);
+          // Utilize tankData as needed
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
 
   return (
     <View style={{ flex: 1 }}>

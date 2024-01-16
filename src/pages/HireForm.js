@@ -37,39 +37,44 @@ export default function Hirefom({ navigation }) {
   const [cityName, setCityName] = useState(null);
   const [suburbName, setSuburbName] = useState(null);
   const [suburbCode, setSuburbCode] = useState(null);
+  const [userID, setUserID] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
   const credentials = firebase.auth();
   useEffect(() => {
     const user = credentials.currentUser;
-    function getUserData() {
-      setIsLoading(true);
-      // let userProfile = await getData("userData");
-      // userProfile = JSON.parse(userProfile);
-      firestore
-        .collection("users")
-        .doc(user.uid)
-        .get()
-        .then((item) => {
-          let userProfile = item.data();
-          setFirstNames(userProfile.firstNames);
-          setSurname(userProfile.surname);
-          setContactNumbers(userProfile.contactNumbers);
-          setEmailAddress(userProfile.emailAddress);
-        })
-        .catch((err) => console.log(err));
-
-      console.log(user.uid);
-
-      setIsLoading(false);
-    }
     getUserData();
   }, []);
+
+  async function getUserData() {
+    setIsLoading(true);
+    try {
+      const item = await getData("userInfo");
+      const fetchedItems = JSON.parse(item);
+      const userId = fetchedItems.user.uid;
+      setUserID(userId);
+      console.log(userId);
+
+      if (userId) {
+        const doc = await firestore.collection("users").doc(userId).get();
+        const userProfile = doc.data();
+        setFirstNames(userProfile.firstNames);
+        setSurname(userProfile.surname);
+        setContactNumbers(userProfile.contactNumbers);
+        setEmailAddress(userProfile.emailAddress);
+      }
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setIsLoading(false);
+    }
+  }
 
   // Handle submit
 
   const handleSubmitForm = async () => {
-    const user = credentials.currentUser;
+    // const user = credentials.currentUser;
+
     const allFieldsFilled = [
       firstNames,
       surname,
@@ -84,7 +89,7 @@ export default function Hirefom({ navigation }) {
     if (allFieldsFilled) {
       try {
         setIsLoading(true);
-        await firestore.collection("pendingOrders").doc(user.uid).set({
+        await firestore.collection("pendingOrders").doc(userID).set({
           firstNames,
           surname,
           contactNumbers,
@@ -114,6 +119,8 @@ export default function Hirefom({ navigation }) {
         [{ text: "OK" }]
       );
     }
+
+    console.log(user);
   };
 
   return (

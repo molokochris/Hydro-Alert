@@ -23,14 +23,19 @@ export default function Community({ navigation }) {
   const [isLoading, setIsLoading] = useState(false);
   const [messageUpdates, setMessageUpdates] = useState([]);
   const [userId, setUserId] = useState("");
+
+  // const credentials = firebase.auth();
   // fetch messages from firebase
   async function fetchID() {
+    // const user = credentials.currentUser;
     try {
       const user = await getData("userInfo")
         .then((info) => JSON.parse(info))
         .catch((err) => console.log(err));
+      console.log(user);
       if (user) {
         const fetchedUserId = user.user.uid;
+        // console.log(fetchedUserId);
         setUserId(fetchedUserId);
       } else {
         console.error("Failed to retrieve user information");
@@ -52,10 +57,7 @@ export default function Community({ navigation }) {
           const messages = snapshot ? snapshot.val() : {};
           const retrievedMessages = Object.values(messages || {});
           setMessageUpdates(retrievedMessages);
-
-          // const user = firebase.auth();
-          // const userId = user.currentUser.uid;
-          // console.log(userId);
+          console.log("messages: ", retrievedMessages);
         });
 
       // Cleanup function to unsubscribe from Firebase listener
@@ -64,22 +66,25 @@ export default function Community({ navigation }) {
     } catch (error) {}
   }, [handleSendMessage]);
 
-  const handleSendMessage = async () => {
+  const handleSendMessage = () => {
     const database = firebase.database();
     const timestamp = firebase.database.ServerValue.TIMESTAMP;
     try {
       setIsLoading(true);
-
-      // console.log(userId);
-      // setUserId(userId);
-      // console.log(user.user.uid);
+      // const user = credentials.currentUser;
 
       if (userId) {
-        database.ref("chats").push({
-          message,
-          timestamp,
-          senderId: userId,
-        });
+        database
+          .ref("chats")
+          .push({
+            message,
+            timestamp,
+            senderId: userId,
+          })
+          .catch((error) => {
+            console.error("Error sending message:", error);
+          });
+
         setMessage("");
         setIsLoading(false);
       }
