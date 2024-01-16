@@ -1,12 +1,21 @@
-import { View, Text, ScrollView, TouchableOpacity, Alert } from "react-native";
+import {
+  View,
+  Text,
+  ScrollView,
+  TouchableOpacity,
+  Alert,
+  Image,
+} from "react-native";
 import React, { useEffect } from "react";
 import { addItem, removeItem } from "../store/reducers";
 import { useDispatch, useSelector } from "react-redux";
 import { Ionicons } from "@expo/vector-icons";
 import { firestore } from "../firebase/firebase";
+import { useState } from "react";
 
 export default function Store({ navigation }) {
   const CartItemsList = useSelector((state) => state);
+  const [products, setProducts] = useState(null);
   let itemsLength = CartItemsList.length;
 
   const dispatch = useDispatch();
@@ -26,6 +35,7 @@ export default function Store({ navigation }) {
   };
 
   useEffect(() => {
+    let items = [];
     firestore
       .collection("tanks")
       .get()
@@ -33,9 +43,11 @@ export default function Store({ navigation }) {
         // Access individual documents using querySnapshot.docs
         querySnapshot.docs.forEach((doc) => {
           const tankData = doc.data();
+          items.push(tankData);
           console.log(tankData);
           // Utilize tankData as needed
         });
+        setProducts(items);
       })
       .catch((err) => {
         console.log(err);
@@ -59,7 +71,7 @@ export default function Store({ navigation }) {
             justifyContent: "space-between",
           }}
         >
-          <View
+          {/* <View
             style={{
               width: "48%",
               height: 200,
@@ -79,7 +91,7 @@ export default function Store({ navigation }) {
                 borderTopEndRadius: 8,
                 padding: 4,
               }}
-            ></View>
+            />
             <View
               style={{
                 flex: 1,
@@ -119,7 +131,75 @@ export default function Store({ navigation }) {
                 <Ionicons name="add" color="black" size={25} />
               </TouchableOpacity>
             </View>
-          </View>
+          </View> */}
+          {products.map((item, id) => {
+            return (
+              <View
+                style={{
+                  width: "48%",
+                  height: 200,
+                  marginBottom: 10,
+                  backgroundColor: "#111111",
+                  borderRadius: 8,
+                  elevation: 20,
+                  shadowOffset: 20,
+                  shadowColor: "gray",
+                }}
+                key={id}
+              >
+                <Image
+                  source={{ uri: item.image }}
+                  style={{
+                    flex: 1,
+                    backgroundColor: "white",
+                    borderTopLeftRadius: 8,
+                    borderTopEndRadius: 8,
+                    padding: 4,
+                  }}
+                  resizeMode="center"
+                />
+                <View
+                  style={{
+                    flex: 1,
+                    backgroundColor: "",
+                    flexDirection: "row",
+                    padding: 4,
+                  }}
+                >
+                  <View
+                    style={{
+                      justifyContent: "center",
+                      alignItems: "center",
+                      padding: 10,
+                      flex: 1,
+                    }}
+                  >
+                    <Text style={{ color: "whitesmoke", marginBottom: 10 }}>
+                      Jojo Tank
+                    </Text>
+                    <Text style={{ color: "whitesmoke", marginBottom: 10 }}>
+                      5000l
+                    </Text>
+                    <Text style={{ color: "whitesmoke" }}>R 4 898.90</Text>
+                  </View>
+                  <TouchableOpacity
+                    style={{
+                      width: 30,
+                      height: 30,
+                      backgroundColor: "whitesmoke",
+                      borderRadius: 100,
+                      alignSelf: "flex-end",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                    onPress={() => addToCart("Jojo tank", 4898.9, 5000)}
+                  >
+                    <Ionicons name="add" color="black" size={25} />
+                  </TouchableOpacity>
+                </View>
+              </View>
+            );
+          })}
         </View>
       </ScrollView>
       <View
