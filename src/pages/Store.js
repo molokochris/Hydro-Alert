@@ -22,19 +22,19 @@ export default function Store({ navigation }) {
   let itemsLength = CartItemsList?.length || 0;
   const dispatch = useDispatch();
 
-  const addToCart = ({ name, price, size, id }) => {
-    const cartItem = {
-      id,
-      name: name,
-      store: "",
-      // price: parseFloat(price),
-      price,
-      // size: parseInt(size),
-      capacity: 0,
-    };
+  const addToCart = (item) => {
+    // const cartItem = {
+    //   id,
+    //   name: name,
+    //   store: "",
+    //   // price: parseFloat(price),
+    //   price,
+    //   // size: parseInt(size),
+    //   capacity: 0,
+    // };
 
-    dispatch(addItem(cartItem));
-    Alert.alert(`added ${name} to cart`);
+    dispatch(addItem(item));
+    Alert.alert(`added ${item.name} to cart`);
     // navigation.goBack();
   };
 
