@@ -18,21 +18,23 @@ export default function Store({ navigation }) {
   const [products, setProducts] = useState();
   const [isLoading, setIsLoading] = useState(false);
 
-  // const CartItemsList = useSelector((state) => state);
-  // let itemsLength = CartItemsList.length;
+  const CartItemsList = useSelector((state) => state);
+  let itemsLength = CartItemsList?.length || 0;
   const dispatch = useDispatch();
 
-  const addToCart = (name, price, size) => {
+  const addToCart = ({ name, price, size, id }) => {
     const cartItem = {
-      id: Date.now().toString(),
+      id,
       name: name,
       store: "",
-      price: parseFloat(price),
-      size: parseInt(size),
+      // price: parseFloat(price),
+      price,
+      // size: parseInt(size),
+      capacity: 0,
     };
 
     dispatch(addItem(cartItem));
-    Alert.alert("added item to cart");
+    Alert.alert(`added ${name} to cart`);
     // navigation.goBack();
   };
 
@@ -91,80 +93,80 @@ export default function Store({ navigation }) {
             >
               <ActivityIndicator size={"large"} color={"whitesmoke"} />
             </View>
-          ) :products ? 
-              products.map((item, id) => {
-                return (
+          ) : products ? (
+            products.map((item, id) => {
+              return (
+                <View
+                  style={{
+                    width: "48%",
+                    height: 200,
+                    marginBottom: 10,
+                    backgroundColor: "#111111",
+                    borderRadius: 8,
+                    elevation: 20,
+                    shadowOffset: 20,
+                    shadowColor: "gray",
+                  }}
+                  key={id}
+                >
+                  <Image
+                    source={{ uri: item.image }}
+                    style={{
+                      flex: 1,
+                      backgroundColor: "white",
+                      borderTopLeftRadius: 8,
+                      borderTopEndRadius: 8,
+                      padding: 4,
+                    }}
+                    resizeMode="center"
+                  />
                   <View
                     style={{
-                      width: "48%",
-                      height: 200,
-                      marginBottom: 10,
-                      backgroundColor: "#111111",
-                      borderRadius: 8,
-                      elevation: 20,
-                      shadowOffset: 20,
-                      shadowColor: "gray",
+                      flex: 1,
+                      backgroundColor: "",
+                      flexDirection: "row",
+                      padding: 4,
                     }}
-                    key={id}
                   >
-                    <Image
-                      source={{ uri: item.image }}
-                      style={{
-                        flex: 1,
-                        backgroundColor: "white",
-                        borderTopLeftRadius: 8,
-                        borderTopEndRadius: 8,
-                        padding: 4,
-                      }}
-                      resizeMode="center"
-                    />
                     <View
                       style={{
+                        justifyContent: "center",
+                        alignItems: "center",
+                        padding: 10,
                         flex: 1,
-                        backgroundColor: "",
-                        flexDirection: "row",
-                        padding: 4,
                       }}
                     >
-                      <View
-                        style={{
-                          justifyContent: "center",
-                          alignItems: "center",
-                          padding: 10,
-                          flex: 1,
-                        }}
-                      >
-                        <Text style={{ color: "whitesmoke", marginBottom: 10 }}>
-                          {item.name}
-                        </Text>
-                        {/* <Text style={{ color: "whitesmoke", marginBottom: 10 }}>
+                      <Text style={{ color: "whitesmoke", marginBottom: 10 }}>
+                        {item.name}
+                      </Text>
+                      {/* <Text style={{ color: "whitesmoke", marginBottom: 10 }}>
                           5000l
                         </Text> */}
-                        <Text style={{ color: "whitesmoke" }}>
-                          R {item.price}
-                        </Text>
-                      </View>
-                      <TouchableOpacity
-                        style={{
-                          width: 30,
-                          height: 30,
-                          backgroundColor: "whitesmoke",
-                          borderRadius: 100,
-                          alignSelf: "flex-end",
-                          justifyContent: "center",
-                          alignItems: "center",
-                        }}
-                        onPress={() => addToCart(item)}
-                      >
-                        <Ionicons name="add" color="black" size={25} />
-                      </TouchableOpacity>
+                      <Text style={{ color: "whitesmoke" }}>
+                        R {item.price}
+                      </Text>
                     </View>
+                    <TouchableOpacity
+                      style={{
+                        width: 30,
+                        height: 30,
+                        backgroundColor: "whitesmoke",
+                        borderRadius: 100,
+                        alignSelf: "flex-end",
+                        justifyContent: "center",
+                        alignItems: "center",
+                      }}
+                      onPress={() => addToCart(item)}
+                    >
+                      <Ionicons name="add" color="black" size={25} />
+                    </TouchableOpacity>
                   </View>
-                );
-                      })
-            :(<Text>No products</Text>
-            )
-          }
+                </View>
+              );
+            })
+          ) : (
+            <Text>No products</Text>
+          )}
         </View>
       </ScrollView>
       <View
@@ -177,9 +179,13 @@ export default function Store({ navigation }) {
         }}
       >
         <View style={{ flex: 1 }}>
-          <Text style={{ color: "whitesmoke" }}>
-            {/* Added {itemsLength} item(s): */}
-          </Text>
+          {products === undefined ? (
+            <Text>Loading products...</Text>
+          ) : (
+            <Text style={{ color: "whitesmoke" }}>
+              Added {itemsLength} item(s):
+            </Text>
+          )}
         </View>
         <TouchableOpacity
           style={{
