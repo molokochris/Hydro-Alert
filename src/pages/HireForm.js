@@ -15,7 +15,7 @@ import InputForm from "../components/InputForm";
 import firebase from "firebase/compat/app";
 import { getData } from "../DB/SecureStorage";
 import { useEffect } from "react";
-import { firestore } from "../firebase/firebase";
+import { Auth, firestore } from "../firebase/firebase";
 
 function Label(props) {
   return (
@@ -39,17 +39,27 @@ export default function Hirefom({ navigation }) {
   const [suburbCode, setSuburbCode] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  const user = firebase.auth().currentUser;
+  const credentials = firebase.auth();
   useEffect(() => {
-    async function getUserData() {
+    const user = credentials.currentUser;
+    function getUserData() {
       setIsLoading(true);
-      let userProfile = await getData("userProfile");
-      userProfile = JSON.parse(userProfile);
+      // let userProfile = await getData("userData");
+      // userProfile = JSON.parse(userProfile);
+      firestore
+        .collection("users")
+        .doc(user.uid)
+        .get()
+        .then((item) => {
+          let userProfile = item.data();
+          setFirstNames(userProfile.firstNames);
+          setSurname(userProfile.surname);
+          setContactNumbers(userProfile.contactNumbers);
+          setEmailAddress(userProfile.emailAddress);
+        })
+        .catch((err) => console.log(err));
 
-      setFirstNames(userProfile.firstNames);
-      setSurname(userProfile.surname);
-      setContactNumbers(userProfile.contactNumbers);
-      setEmailAddress(userProfile.emailAddress);
+      console.log(user.uid);
 
       setIsLoading(false);
     }
@@ -59,6 +69,7 @@ export default function Hirefom({ navigation }) {
   // Handle submit
 
   const handleSubmitForm = async () => {
+    const user = credentials.currentUser;
     const allFieldsFilled = [
       firstNames,
       surname,

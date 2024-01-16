@@ -24,19 +24,26 @@ export default function Community({ navigation }) {
   const [messageUpdates, setMessageUpdates] = useState([]);
   const [userId, setUserId] = useState("");
   // fetch messages from firebase
-  // const scrollRef = useRef(null);
   async function fetchID() {
-    const user = await getData("userInfo").then((info) => {
-      return JSON.parse(info);
-    });
-
-    const fetchedUserId = user.user.uid;
-    setUserId(fetchedUserId);
+    try {
+      const user = await getData("userInfo")
+        .then((info) => JSON.parse(info))
+        .catch((err) => console.log(err));
+      if (user) {
+        const fetchedUserId = user.user.uid;
+        setUserId(fetchedUserId);
+      } else {
+        console.error("Failed to retrieve user information");
+      }
+    } catch (error) {
+      console.error("Error fetching user data or hashing password:", error);
+    }
   }
   useEffect(() => {
     try {
       setIsLoading(true);
       fetchID();
+
       const database = firebase.database();
 
       const unsubscribe = database
@@ -137,9 +144,9 @@ export default function Community({ navigation }) {
                     borderWidth: 0.5,
                     borderColor: "gray",
                     borderRadius: 100,
-                    backgroundColor: generateUniqueColor(
-                      messageUpdate.senderId
-                    ),
+                    // backgroundColor: generateUniqueColor(
+                    //   messageUpdate.senderId
+                    // ),
                     // marginRight: userId == messageUpdate.senderId ? 0 : 10,
                     // marginLeft: userId == messageUpdate.senderId ? 10 : 0,
                     marginRight: 10,
