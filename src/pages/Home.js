@@ -185,7 +185,7 @@ export default function Home({ navigation, route }) {
             {/* Mon */}
             {updates[0].dayOfWeek}
           </Text>
-          <Text
+          {/* <Text
             style={{
               fontSize: calculateFontSize(60),
               fontWeight: "bold",
@@ -194,7 +194,7 @@ export default function Home({ navigation, route }) {
             }}
           >
             13 Oct 23
-          </Text>
+          </Text> */}
           <Text
             style={{
               fontSize: calculateFontSize(60),
@@ -225,6 +225,8 @@ export default function Home({ navigation, route }) {
             flexDirection: "column",
             alignItems: "center",
             justifyContent: "space-around",
+            paddingVertical: 12,
+            paddingHorizontal: 14,
           }}
           onPress={() => setModalVisible(true)}
         >
@@ -239,8 +241,9 @@ export default function Home({ navigation, route }) {
           >
             Emergency Alert
           </Text>
-          <Text style={{ color: "#BDBDBD", fontFamily: "Poppins-Regular" }}>
-            20 sec ago
+          <Text style={{ color: "gray", fontFamily: "Poppins-Regular" }}>
+            {/* 20 sec ago */}
+            tab to see emergency alerts
           </Text>
         </Pressable>
       </View>
@@ -398,16 +401,17 @@ export default function Home({ navigation, route }) {
           setModalVisible(!modalVisible);
         }}
       >
-        <LinearGradient
-          colors={[
-            "#90C418",
-            "#018553",
-            "#111111",
-            "#000000",
-            "#111111",
-            "#018553",
-            "#90C418",
-          ]}
+        <View
+          // {/* <LinearGradient
+          // colors={[
+          //   "#90C418",
+          //   "#018553",
+          //   "#111111",
+          //   "#000000",
+          //   "#111111",
+          //   "#018553",
+          //   "#90C418",
+          // ]} */}
           style={{
             alignSelf: "center",
             flex: 1,
@@ -415,7 +419,7 @@ export default function Home({ navigation, route }) {
             // justifyContent: "center",
             alignItems: "center",
             padding: 10,
-            // backgroundColor: "whitesmoke",
+            backgroundColor: "#111111",
           }}
         >
           <Pressable
@@ -454,7 +458,7 @@ export default function Home({ navigation, route }) {
                 Emergency Update:
               </Text>
               <Text style={{ color: "whitesmoke", marginBottom: 25 }}>
-                Water Delivery Delay Attention Residents of Tsisintsi
+                Water Delivery Delay Attention Residents of {location}
               </Text>
               <Text style={{ color: "whitesmoke", marginBottom: 40 }}>
                 Message: {updates[1] ? updates[1].message : "no message"}
@@ -487,7 +491,8 @@ export default function Home({ navigation, route }) {
               </Text>
             </View>
           </ScrollView>
-        </LinearGradient>
+          {/* </LinearGradient> */}
+        </View>
       </Modal>
       {/* </View> */}
     </LinearGradient>

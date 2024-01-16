@@ -113,129 +113,137 @@ export default function Community({ navigation }) {
           Community Forum
         </Text>
       </View>
-      <View
-        style={{
-          // borderWidth: 1,
-          // borderColor: "gray",
-          borderRadius: 8,
-          flex: 1,
-          // marginBottom: 10,
-          padding: 6,
-          // backgroundColor: "#111111",
-        }}
-      >
-        <ScrollView showsVerticalScrollIndicator={true}>
-          {/* Text bubble */}
-          {messageUpdates.map((messageUpdate, index) => (
-            <View
-              key={index}
-              style={{
-                // width: "100%",
-                maxHeight: 100,
-                padding: 2,
-                borderRadius: 8,
-                marginBottom: 8,
-                flexDirection:
-                  userId == messageUpdate.senderId ? "row-reverse" : "row",
-              }}
-            >
-              {userId == messageUpdate.senderId ? (
-                <></>
-              ) : (
-                <View
-                  style={{
-                    width: 30,
-                    height: 30,
-                    borderWidth: 0.5,
-                    borderColor: "gray",
-                    borderRadius: 100,
-                    // backgroundColor: generateUniqueColor(
-                    //   messageUpdate.senderId
-                    // ),
-                    // marginRight: userId == messageUpdate.senderId ? 0 : 10,
-                    // marginLeft: userId == messageUpdate.senderId ? 10 : 0,
-                    marginRight: 10,
-                  }}
-                />
-              )}
+      {isLoading ? (
+        <View
+          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+        >
+          <ActivityIndicator size={"large"} color={"#90C418"} />
+        </View>
+      ) : (
+        <View
+          style={{
+            // borderWidth: 1,
+            // borderColor: "gray",
+            borderRadius: 8,
+            flex: 1,
+            // marginBottom: 10,
+            padding: 6,
+            // backgroundColor: "#111111",
+          }}
+        >
+          <ScrollView showsVerticalScrollIndicator={true}>
+            {/* Text bubble */}
+            {messageUpdates.map((messageUpdate, index) => (
               <View
+                key={index}
                 style={{
-                  // flex:  ? 1,
-                  backgroundColor:
-                    userId == messageUpdate.senderId
-                      ? "rgba(153,156,230,.6)"
-                      : "#111111",
-                  // backgroundColor: "#686868",
-                  padding: 5,
-                  borderTopLeftRadius:
-                    userId == messageUpdate.senderId ? 12 : 4,
-                  borderBottomStartRadius: 12,
-                  borderTopRightRadius:
-                    userId == messageUpdate.senderId ? 4 : 12,
-                  borderBottomEndRadius: 12,
-                  width: "80%",
+                  // width: "100%",
+                  maxHeight: 100,
+                  padding: 2,
+                  borderRadius: 8,
+                  marginBottom: 8,
+                  flexDirection:
+                    userId == messageUpdate.senderId ? "row-reverse" : "row",
                 }}
               >
-                {/* <Text style={{ color: "whitesmoke" }}>
-                {messageUpdate.senderId}
-              </Text> */}
-                <Text
+                {userId == messageUpdate.senderId ? (
+                  <></>
+                ) : (
+                  <View
+                    style={{
+                      width: 30,
+                      height: 30,
+                      borderWidth: 0.5,
+                      borderColor: "gray",
+                      borderRadius: 100,
+                      // backgroundColor: generateUniqueColor(
+                      //   messageUpdate.senderId
+                      // ),
+                      // marginRight: userId == messageUpdate.senderId ? 0 : 10,
+                      // marginLeft: userId == messageUpdate.senderId ? 10 : 0,
+                      marginRight: 10,
+                    }}
+                  />
+                )}
+                <View
                   style={{
-                    // height: 60,
-                    paddingHorizontal: 4,
-                    color: "whitesmoke",
-                    fontFamily: "Poppins-Regular",
-                    fontSize: calculateFontSize(16),
+                    // flex:  ? 1,
+                    backgroundColor:
+                      userId == messageUpdate.senderId
+                        ? "rgba(153,156,230,.6)"
+                        : "#111111",
+                    // backgroundColor: "#686868",
+                    padding: 5,
+                    borderTopLeftRadius:
+                      userId == messageUpdate.senderId ? 12 : 4,
+                    borderBottomStartRadius: 12,
+                    borderTopRightRadius:
+                      userId == messageUpdate.senderId ? 4 : 12,
+                    borderBottomEndRadius: 12,
+                    width: "80%",
                   }}
                 >
-                  {messageUpdate.message}
-                </Text>
+                  {/* <Text style={{ color: "whitesmoke" }}>
+                {messageUpdate.senderId}
+              </Text> */}
+                  <Text
+                    style={{
+                      // height: 60,
+                      paddingHorizontal: 4,
+                      color: "whitesmoke",
+                      fontFamily: "Poppins-Regular",
+                      fontSize: calculateFontSize(16),
+                    }}
+                  >
+                    {messageUpdate.message}
+                  </Text>
+                </View>
               </View>
-            </View>
-          ))}
-        </ScrollView>
-        <View
-          style={{ height: 75, borderTopWidth: 0.5, borderColor: "yellow" }}
-        >
-          <TextInput
-            value={message}
-            onChangeText={(text) => setMessage(text)}
-            placeholder="Type your message here..."
-            multiline={true}
-            maxLength={200}
-            style={{
-              flex: 1,
-              borderRadius: 8,
-              backgroundColor: "transparent",
-              fontSize: 12,
-              padding: 2,
-            }}
-          />
-          <TouchableOpacity
-            style={{
-              paddingHorizontal: 25,
-              paddingVertical: 8,
-              backgroundColor: "#005BEA",
-              alignSelf: "flex-end",
-              justifyContent: "center",
-              alignItems: "center",
-              borderRadius: 4,
-              position: "absolute",
-              bottom: 0,
-            }}
-            disabled={!message}
-            onPress={handleSendMessage}
+            ))}
+          </ScrollView>
+          <View
+            style={{ height: 75, borderTopWidth: 0.5, borderColor: "yellow" }}
           >
-            {isLoading ? (
-              <ActivityIndicator size={"small"} color="whitesmoke" />
-            ) : (
-              <Text style={{ color: "whitesmoke", fontWeight: "500" }}>
-                Post
-              </Text>
-            )}
-          </TouchableOpacity>
+            <TextInput
+              value={message}
+              onChangeText={(text) => setMessage(text)}
+              placeholder="Type your message here..."
+              multiline={true}
+              maxLength={200}
+              style={{
+                flex: 1,
+                borderRadius: 8,
+                backgroundColor: "transparent",
+                fontSize: 12,
+                padding: 2,
+              }}
+            />
+            <TouchableOpacity
+              style={{
+                paddingHorizontal: 25,
+                paddingVertical: 8,
+                backgroundColor: "#005BEA",
+                alignSelf: "flex-end",
+                justifyContent: "center",
+                alignItems: "center",
+                borderRadius: 4,
+                position: "absolute",
+                bottom: 0,
+              }}
+              disabled={!message}
+              onPress={handleSendMessage}
+            >
+              {isLoading ? (
+                <ActivityIndicator size={"small"} color="whitesmoke" />
+              ) : (
+                <Text style={{ color: "whitesmoke", fontWeight: "500" }}>
+                  Post
+                </Text>
+              )}
+            </TouchableOpacity>
+          </View>
         </View>
-      </View>
+      )}
       {/* <View style={{ position: "absolute", bottom: 20, right: 20 }}>
         <FontAwesome name="pencil-square" size={40} color="#BDBDBD" />
       </View> */}
