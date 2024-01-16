@@ -32,7 +32,7 @@ export default function ProfileInfo({ navigation, route }) {
     firebase.auth().currentUser.email
   );
   const [isLoading, setIsLoading] = useState(false);
-
+  navigation.goBack(null);
   //   handle user info
 
   const handleProfileInfo = async () => {
